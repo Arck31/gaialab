@@ -69,7 +69,10 @@
   .petal{fill:var(--petal);stroke:#8a5a00;stroke-width:2}
   .petal.b{fill:var(--petal2)}
   #disc{fill:var(--disc);stroke:#5a3a12;stroke-width:3}
-  #headHit{cursor:pointer}
+  #headHit{cursor:pointer;outline:none}
+  /* en celulares: sin el recuadro azul al tocar y sin seleccionar texto al mantener pulsado */
+  html{-webkit-tap-highlight-color:transparent}
+  .stage{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
   .face>g,.extra{opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;
     transition:opacity .35s ease,transform .55s cubic-bezier(.34,1.56,.64,1)}
   #scene[data-mood=happy] .m-happy,#scene[data-mood=hot] .m-hot,#scene[data-mood=thirsty] .m-thirsty,
