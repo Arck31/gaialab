@@ -5,19 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GaiaLab - Mi girasol</title>
 <style>
-  :root{--ink:#3b2a14;--card:#fffdf4;--line:#f0dfa8}
+  :root{--ink:#3b2a14;--card:#fffdf6;--line:#f0dfa8;--ok:#2f9e44;--okbg:#e6f9e8}
   *{box-sizing:border-box}
   body{margin:0;min-height:100vh;color:var(--ink);font:18px/1.35 "Trebuchet MS","Comic Sans MS",system-ui,sans-serif;
-       background:linear-gradient(#8fd3ff 0%,#d6f1ff 55%,#9be37a 55.1%,#6cc24a 100%);overflow-x:hidden}
-  .wrap{max-width:1100px;margin:0 auto;padding:12px 14px 40px}
+       background:linear-gradient(#8fd3ff 0,#cdeeff 380px,#e8f8ff 72%,#c4ecab 100%);overflow-x:hidden}
+  .wrap{max-width:1120px;margin:0 auto;padding:12px 14px 40px}
   header{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo .sunico{font-size:46px;line-height:1;display:inline-block;animation:nod 3s ease-in-out infinite}
+  @keyframes nod{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
+  h1{margin:0;font-size:clamp(26px,4.6vw,38px);line-height:1;text-shadow:0 2px 0 #fff}
+  .sub{font-size:16px;font-weight:700;color:#3d7a1f}
   .hdr-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
-  h1{margin:0;font-size:clamp(22px,4vw,34px);text-shadow:0 2px 0 #fff}
   .badge{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-size:13px;background:#fff;border-radius:99px;padding:4px 12px;border:2px solid var(--line)}
   .badge.ok{border-color:#4cc16b} .badge.bad{border-color:#e0452e}
-  .layout{display:grid;grid-template-columns:minmax(300px,1.1fr) minmax(280px,1fr);gap:14px;align-items:start}
+  .layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(300px,1fr);gap:16px;align-items:start;margin-top:12px}
   @media(max-width:820px){.layout{grid-template-columns:1fr}}
-  .stage{position:relative;background:linear-gradient(#a8dcff,#e8f7ff);border:4px solid #fff;border-radius:26px;
+  .left,.panel{display:grid;gap:14px}
+  .stage{position:relative;background:linear-gradient(#a8dcff,#e8f7ff);border:4px solid #fff;border-radius:28px;
          box-shadow:0 6px 0 rgba(0,0,0,.12);overflow:hidden}
   .sun{position:absolute;right:16px;top:12px;width:70px;height:70px;border-radius:50%;background:#ffe45c;
        box-shadow:0 0 0 8px #fff2a0aa,0 0 40px 14px #ffe45c88;animation:pulse 3s ease-in-out infinite}
@@ -31,40 +36,67 @@
   .bubble{position:absolute;left:14px;top:14px;max-width:58%;background:#fff;border:3px solid var(--ink);border-radius:20px;
           padding:8px 14px;font-weight:700;font-size:clamp(16px,2.6vw,22px);box-shadow:0 4px 0 rgba(0,0,0,.15)}
   .bubble small{display:block;font-weight:400;font-size:.72em;margin-top:2px}
-  .hearts{position:absolute;left:14px;bottom:10px;font-size:26px;letter-spacing:2px;background:#ffffffcc;border-radius:99px;padding:2px 12px}
-  .panel{display:grid;gap:12px}
-  .card{background:var(--card);border:3px solid var(--line);border-radius:22px;padding:12px 14px;box-shadow:0 4px 0 rgba(0,0,0,.08)}
-  .card h2{margin:0 0 6px;font-size:19px}
-  .meter{display:flex;gap:12px;align-items:center}
-  .tube{position:relative;flex:1;height:30px;border-radius:99px;border:3px solid var(--ink);overflow:hidden;background:#fff}
-  .tube .zones{position:absolute;inset:0;display:flex}
-  .tube .zones i{display:block;height:100%}
-  .tube .pin{position:absolute;top:-4px;bottom:-4px;width:6px;margin-left:-3px;background:var(--ink);border-radius:3px;transition:left .8s}
-  .tube .pin::after{content:"";position:absolute;top:-9px;left:-6px;border:9px solid transparent;border-top-color:var(--ink);border-bottom:0}
-  .big{font-size:30px;font-weight:800;min-width:92px;text-align:right;font-variant-numeric:tabular-nums}
-  .scale{display:flex;justify-content:space-between;font-size:13px;opacity:.7;margin-top:2px}
-  .helpers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .helper{text-align:center;border-radius:16px;padding:8px;background:#fff;border:3px solid var(--line)}
-  .helper.on{border-color:#4cc16b;background:#eaffef}
-  .helper .ico{font-size:40px;display:inline-block}
+  .card{background:var(--card);border:3px solid var(--line);border-radius:24px;padding:14px 16px;box-shadow:0 5px 0 rgba(0,0,0,.08)}
+  .card h2{margin:0;font-size:22px;display:flex;align-items:center;gap:8px}
+  .card h2 .ico{font-size:28px}
+  .cap{font-size:14px;color:#7a6a50;margin-top:-2px}
+  /* salud */
+  .health{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;border-color:#ffc6d3}
+  .health .hearts{font-size:30px;letter-spacing:2px;white-space:nowrap}
+  .status{font-weight:800;font-size:18px;padding:6px 14px;border-radius:99px;transition:background .4s,color .4s}
+  .status.good{background:var(--okbg);color:#1f7a32}.status.help{background:#fff0de;color:#b4501a}.status.wait{background:#eef2f6;color:#5b6b7a}
+  /* medidores: termometro y gota que se llenan + semaforo de tres caritas */
+  .gauges{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .gauge{text-align:center;padding:14px 10px}
+  .gauge h2{justify-content:center}
+  .gauge.temp{border-color:#ffc9b0}.gauge.water{border-color:#b9ddff}
+  .g-body{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 10px}
+  .g-body svg{height:92px;width:auto;flex:none}
+  .g-val{font-size:clamp(30px,8vw,42px);font-weight:800;font-variant-numeric:tabular-nums;min-width:3ch}
+  .fill{transform-box:fill-box;transform-origin:50% 100%;transition:transform .9s cubic-bezier(.3,1.3,.5,1),fill .6s}
+  .steps{display:flex;gap:4px;justify-content:center}
+  .steps span{flex:1;display:flex;flex-direction:column;align-items:center;font-size:24px;padding:4px 0;border-radius:14px;
+              border:2px solid transparent;opacity:.35;filter:grayscale(.7);transition:all .4s}
+  .steps span b{font-size:12px}
+  .steps span.on{opacity:1;filter:none;border-color:currentColor;background:#fff;transform:scale(1.08)}
+  .steps .c{color:#2b7de9}.steps .k{color:#1f9a3a}.steps .h{color:#e0452e}.steps .d{color:#c27a1a}
+  /* ayudantes */
+  .helpers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .helper{text-align:center;border-radius:18px;padding:10px 8px;background:#fff;border:3px solid #e8e8e8;transition:all .3s}
+  .helper .ico{font-size:46px;display:inline-block;line-height:1.1}
+  .helper b{display:block;font-size:19px}
+  .helper .what{display:block;font-size:13px;color:#6b5a40}
+  .helper .pill{display:inline-block;margin-top:6px;font-size:14px;font-weight:800;padding:3px 10px;border-radius:99px;background:#eef2f6;color:#5b6b7a}
+  .helper.on{border-color:#4cc16b;background:var(--okbg)}
+  .helper.on .pill{background:var(--ok);color:#fff}
   .helper.on.fog .ico{animation:bob .8s ease-in-out infinite}
   .helper.on.fan .ico{animation:spin 1s linear infinite}
-  .helper b{display:block}.helper span{font-size:14px}
   @keyframes bob{50%{transform:translateY(-8px)}}@keyframes spin{to{transform:rotate(360deg)}}
-  .fact{font-size:16px}
-  details{background:var(--card);border:3px solid var(--line);border-radius:18px;padding:8px 14px}
+  /* dato curioso */
+  .fact{display:flex;gap:12px;align-items:center;border-color:#ffe08a}
+  .fact .bee{font-size:44px;flex:none;animation:bob 2.4s ease-in-out infinite}
+  .fact p{margin:2px 0 6px;font-size:17px}
+  .fact button{font-size:14px;padding:3px 12px}
+  /* demo: "¿que pasa si...?" */
+  #demo{display:none;margin-top:12px;padding:10px 12px;background:#ffffffcc;border:3px dashed #ffc94d;border-radius:20px}
+  #demo.show{display:block}
+  #demo .t{font-weight:800;margin-bottom:8px}
+  #demo .row{display:flex;gap:8px;flex-wrap:wrap}
+  #demo button{font-size:16px;padding:6px 12px}
+  #demo button.sel{background:#8fe08b}
+  /* modo profesor */
+  details{margin-top:16px;background:var(--card);border:3px solid var(--line);border-radius:18px;padding:8px 14px}
   summary{cursor:pointer;font-weight:700}
   .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
   .tgrid div{background:#fff;border:2px solid var(--line);border-radius:10px;padding:4px 8px;font-size:14px}
   .tgrid b{display:block;font-size:20px}
-  details label{display:flex;gap:8px;align-items:center;margin:6px 0;font-size:15px}
+  details label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0;font-size:15px}
   details input[type=number]{width:80px;font:inherit;padding:2px 6px;border-radius:8px;border:2px solid var(--line)}
   button{font:inherit;font-size:15px;font-weight:700;border:3px solid var(--ink);background:#ffe45c;color:var(--ink);
          border-radius:14px;padding:5px 12px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2)}
   button:active{transform:translateY(2px);box-shadow:none}
   canvas#hist{width:100%;height:150px;background:#fff;border-radius:10px;border:2px solid var(--line)}
-  #demo{display:none;margin:10px 0;gap:6px;flex-wrap:wrap}
-  #demo.show{display:flex}
+  @media (prefers-reduced-motion:reduce){.logo .sunico,.fact .bee,.helper .ico{animation:none!important}}
   /* ---- girasol: caras y extras se funden entre si; el movimiento lo calcula el JS en cada cuadro ---- */
   #scene{--petal:#e8dca0;--petal2:#d4c680;--disc:#7d6a50;touch-action:manipulation}
   .petal{fill:var(--petal);stroke:#8a5a00;stroke-width:2}
@@ -119,13 +151,14 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🌻 GaiaLab: ¡Cuida a tu girasol!</h1>
+    <div class="logo"><span class="sunico">🌻</span><div><h1>GaiaLab</h1><div class="sub">¡Cuida a tu girasol!</div></div></div>
     <div class="hdr-right"><button id="demoBtn" style="font-size:13px;padding:2px 10px">🎮 Demo</button><span id="conn" class="badge">conectando…</span></div>
   </header>
 
-  <div id="demo"></div>
+  <div id="demo"><div class="t">🎮 ¿Qué pasa si…?</div><div class="row" id="demoRow"></div></div>
 
   <div class="layout">
+  <div class="left">
     <div class="stage">
       <div class="sun"></div><div class="cloud"></div><div class="cloud c2"></div>
       <svg id="scene" viewBox="0 0 400 480" data-mood="sleep" role="img" aria-label="Girasol">
@@ -254,46 +287,75 @@
         <g id="fx"></g>
       </svg>
       <div class="bubble" id="bubble">Despertando…<small>Esperando datos del sensor</small></div>
-      <div class="hearts" id="hearts">🤍🤍🤍🤍🤍</div>
     </div>
-
-    <div class="panel">
-      <div class="card">
-        <h2>🌡️ ¿Cuánto calor tengo?</h2>
-        <div class="meter">
-          <div class="tube" id="tubeT"><div class="zones"><i style="flex:5;background:#9fd8ff"></i><i style="flex:9;background:#8fe08b"></i><i style="flex:6;background:#ff8a6b"></i></div><div class="pin" id="pinT"></div></div>
-          <div class="big" id="vT">--</div>
-        </div>
-        <div class="scale"><span>🥶 frío</span><span>😊 perfecto</span><span>🥵 calor</span></div>
-      </div>
-      <div class="card">
-        <h2>💧 ¿Cuánta agua hay en el aire?</h2>
-        <div class="meter">
-          <div class="tube" id="tubeH"><div class="zones"><i style="flex:1;background:#ffe3a3" id="zdry"></i><i style="flex:1;background:#8fe08b" id="zok"></i><i style="flex:1;background:#9fd8ff" id="zwet"></i></div><div class="pin" id="pinH"></div></div>
-          <div class="big" id="vH">--</div>
-        </div>
-        <div class="scale"><span>🏜️ seco</span><span>😊 perfecto</span><span>🌧️ mojado</span></div>
-      </div>
-      <div class="helpers">
-        <div class="helper fog" id="hFog"><span class="ico">☁️</span><b>Nube</b><span id="tFog">descansando</span></div>
-        <div class="helper fan" id="hFan"><span class="ico">🌀</span><b>Molinillo</b><span id="tFan">descansando</span></div>
-      </div>
-      <div class="card fact" id="fact"></div>
-      <details>
-        <summary>🔬 Modo profesor</summary>
-        <div class="tgrid">
-          <div><b id="dH">-</b>Humedad %</div><div><b id="dT">-</b>Temp °C</div><div><b id="dS">-</b>Meta %</div>
-          <div><b id="dF">-</b>PWM nube</div><div><b id="dV">-</b>PWM ventilador</div><div><b id="dM">-</b>Temp máx °C</div>
-        </div>
-        <canvas id="hist" width="600" height="150"></canvas>
-        <label>Meta de humedad <input id="inSP" type="number" min="40" max="95" step="1" value="80"> %
-          Temp máx <input id="inTM" type="number" min="20" max="35" step="0.5" value="26"> °C</label>
-        <label>PIN del profesor <input id="inPass" type="password" autocomplete="off" style="width:130px">
-          <button id="send">Enviar</button></label>
-        <div id="profeMsg" style="font-size:14px;min-height:20px"></div>
-      </details>
+    <div class="card health">
+      <h2><span class="ico">💖</span>Salud</h2>
+      <div class="hearts" id="hearts">🤍🤍🤍🤍🤍</div>
+      <div class="status wait" id="status">Esperando al sensor…</div>
     </div>
   </div>
+
+  <div class="panel">
+    <div class="gauges">
+      <div class="card gauge temp">
+        <h2><span class="ico">🌡️</span>Calor</h2>
+        <div class="cap">temperatura</div>
+        <div class="g-body">
+          <svg viewBox="0 0 40 100" aria-hidden="true">
+            <rect x="12" y="4" width="16" height="74" rx="8" fill="#fff" stroke="#3b2a14" stroke-width="3"/>
+            <rect id="thermoFill" class="fill" x="16.5" y="8" width="7" height="72" rx="3.5" fill="#cfd8dc" style="transform:scaleY(.05)"/>
+            <circle id="thermoBulb" class="fill" cx="20" cy="82" r="14" fill="#cfd8dc" stroke="#3b2a14" stroke-width="3"/>
+            <rect x="15" y="12" width="3" height="40" rx="1.5" fill="#fff" opacity=".7"/>
+          </svg>
+          <div class="g-val" id="vT">--</div>
+        </div>
+        <div class="steps" id="stT"><span class="c" data-s="cold">🥶<b>Frío</b></span><span class="k" data-s="ok">😊<b>Bien</b></span><span class="h" data-s="hot">🥵<b>Calor</b></span></div>
+      </div>
+      <div class="card gauge water">
+        <h2><span class="ico">💧</span>Agua</h2>
+        <div class="cap">en el aire</div>
+        <div class="g-body">
+          <svg viewBox="0 0 60 86" aria-hidden="true">
+            <defs><clipPath id="dropClip"><path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z"/></clipPath></defs>
+            <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="#fff"/>
+            <g clip-path="url(#dropClip)"><rect id="dropFill" class="fill" x="0" y="0" width="60" height="86" fill="#4fb3ff" style="transform:scaleY(0)"/></g>
+            <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="none" stroke="#3b2a14" stroke-width="3"/>
+            <ellipse cx="19" cy="50" rx="4" ry="9" fill="#fff" opacity=".6"/>
+          </svg>
+          <div class="g-val" id="vH">--</div>
+        </div>
+        <div class="steps" id="stH"><span class="d" data-s="dry">🏜️<b>Seco</b></span><span class="k" data-s="ok">😊<b>Bien</b></span><span class="c" data-s="wet">🌧️<b>Mojado</b></span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="ico">🤝</span>Mis ayudantes</h2>
+      <div class="helpers">
+        <div class="helper fog" id="hFog"><span class="ico">☁️</span><b>Nube</b><span class="what">Echa agüita al aire</span><span class="pill" id="tFog">Descansando 💤</span></div>
+        <div class="helper fan" id="hFan"><span class="ico">🌀</span><b>Molinillo</b><span class="what">Trae aire fresquito</span><span class="pill" id="tFan">Descansando 💤</span></div>
+      </div>
+    </div>
+
+    <div class="card fact">
+      <span class="bee">🐝</span>
+      <div><b>¿Sabías que…?</b><p id="fact"></p><button id="nextFact">Otro dato ➜</button></div>
+    </div>
+  </div>
+</div>
+
+<details>
+  <summary>🔬 Modo profesor</summary>
+  <div class="tgrid">
+    <div><b id="dH">-</b>Humedad %</div><div><b id="dT">-</b>Temp °C</div><div><b id="dS">-</b>Meta %</div>
+    <div><b id="dF">-</b>PWM nube</div><div><b id="dV">-</b>PWM ventilador</div><div><b id="dM">-</b>Temp máx °C</div>
+  </div>
+  <canvas id="hist" width="600" height="150"></canvas>
+  <label>Meta de humedad <input id="inSP" type="number" min="40" max="95" step="1" value="80"> %
+    Temp máx <input id="inTM" type="number" min="20" max="35" step="0.5" value="26"> °C</label>
+  <label>PIN del profesor <input id="inPass" type="password" autocomplete="off" style="width:130px">
+    <button id="send">Enviar</button></label>
+  <div id="profeMsg" style="font-size:14px;min-height:20px"></div>
+</details>
 </div>
 
 <script src="config.js" onerror="void 0"></script>
@@ -308,6 +370,8 @@ let demo = Q.has('demo') || (!/^https?:$/.test(location.protocol) && !Q.get('esp
 const CLOUD = !demo && !!CFG && !!window.mqtt && !Q.get('esp');                              // con config.js => nube
 const TOL_H = 5, T_MIN = 18;                                         // margen de humedad y temperatura minima comoda
 
+const STATUS = {happy:['¡Súper feliz! 🌟','good'], hot:['Necesita aire fresco','help'], thirsty:['Necesita agüita','help'],
+                wet:['Tiene mucha agua','help'], cold:['Necesita calorcito','help'], sleep:['Esperando al sensor…','wait']};
 const MOODS = {
   happy:  ['¡Estoy feliz! 🌞', 'Tengo el agua y el calor justos.'],
   hot:    ['¡Uf, tengo mucho calor! 🥵', 'El molinillo me está dando aire fresco.'],
@@ -317,14 +381,16 @@ const MOODS = {
   sleep:  ['Zzz… estoy dormida 😴', 'No me llegan datos del sensor.']
 };
 const FACTS = [
-  '🌱 ¿Sabías que las plantas «sudan»? Se llama transpiración y así se refrescan.',
+  '🌱 Las plantas «sudan»: se llama transpiración y así se refrescan.',
   '🌻 Los girasoles jóvenes siguen al Sol durante el día. ¡Se llama heliotropismo!',
   '💧 Las plantas toman agua por las raíces y la suben hasta las hojas.',
   '🌡️ Si hace mucho calor, las plantas cierran sus poros para no perder agua.',
   '🍃 Las hojas fabrican su comida con luz, agua y aire. ¡Eso es la fotosíntesis!',
   '🌍 Cuidar las plantas ayuda a cuidar el planeta. ¡Tú eres un científico!'
 ];
-let fi = 0; const showFact = () => $('fact').textContent = FACTS[fi++ % FACTS.length]; showFact(); setInterval(showFact, 12000);
+let fi = 0, factTimer;
+function showFact(){ $('fact').textContent = FACTS[fi++ % FACTS.length]; clearInterval(factTimer); factTimer = setInterval(showFact, 15000); }
+showFact(); $('nextFact').onclick = showFact;
 
 // ---- logica del estado de animo ----
 function moodOf(d){
@@ -348,6 +414,7 @@ function setMood(m){                                       // exige 2 lecturas s
 }
 function apply(m){ const prev = mood; mood = m; pending = null;
   $('scene').dataset.mood = m; setBubble();
+  const st = STATUS[m]; $('status').textContent = st[0]; $('status').className = 'status ' + st[1];
   if (prev !== m){ sqv += 2.2*RM; if (m === 'happy') burst('✨', 6); }   // brinquito al cambiar de animo
 }
 function setBubble(){ if (Date.now() < tickleUntil) return;
@@ -454,22 +521,31 @@ $('headHit').addEventListener('pointerdown', () => {
 
 // ---- pintar datos ----
 const hist = {h:[], t:[]};
+const clamp01 = v => Math.max(0, Math.min(1, v));
+function setSteps(id, s){ $(id).querySelectorAll('span').forEach(e => e.classList.toggle('on', e.dataset.s === s)); }
+function helper(id, txtId, on){ $(id).classList.toggle('on', on); $(txtId).textContent = on ? '¡Trabajando! 💪' : 'Descansando 💤'; }
 function render(d){
   setMood(moodOf(d));
-  if (!d) { $('hearts').textContent = '🤍🤍🤍🤍🤍'; return; }
+  if (!d){                                                     // sin datos: todo en reposo
+    $('hearts').textContent = '🤍🤍🤍🤍🤍'; $('vT').textContent = '--'; $('vH').textContent = '--';
+    setSteps('stT', ''); setSteps('stH', '');
+    $('thermoFill').style.transform = 'scaleY(.05)'; $('dropFill').style.transform = 'scaleY(0)';
+    for (const e of ['thermoFill', 'thermoBulb']) $(e).style.fill = '#cfd8dc';
+    helper('hFog', 'tFog', false); helper('hFan', 'tFan', false);
+    document.querySelectorAll('.puff,.wind').forEach(p => p.classList.remove('on'));
+    return;
+  }
   const n = heartsOf(d); $('hearts').textContent = '❤️'.repeat(n) + '🤍'.repeat(5-n);
   $('vT').textContent = d.t.toFixed(1) + '°'; $('vH').textContent = Math.round(d.h) + '%';
-  const tPos = Math.min(1, Math.max(0, (d.t - 10)/(40 - 10))) * 100;           // escala 10-40 °C; zonas 5:9:6 -> 10-15 / 15-24 / 24-30 ...
-  $('pinT').style.left = tPos + '%';
-  // zonas del termometro segun limites reales: frio < T_MIN, perfecto hasta tmax, calor despues
-  const zs = $('tubeT').querySelectorAll('i'), tot = 30;
-  zs[0].style.flex = (T_MIN-10)/tot*100; zs[1].style.flex = (d.tmax-T_MIN)/tot*100; zs[2].style.flex = (40-d.tmax)/tot*100;
-  const lo = d.sp - TOL_H, hi = d.sp + TOL_H;                                 // humedad: escala 40-100 %
-  $('zdry').style.flex = (lo-40); $('zok').style.flex = 2*TOL_H; $('zwet').style.flex = (100-hi);
-  $('pinH').style.left = Math.min(1, Math.max(0, (d.h-40)/60))*100 + '%';
+  const ts = d.t < T_MIN ? 'cold' : d.t > d.tmax + 0.5 ? 'hot' : 'ok';            // mismos limites que el animo del girasol
+  const hs = d.h < d.sp - TOL_H ? 'dry' : d.h > d.sp + TOL_H ? 'wet' : 'ok';
+  setSteps('stT', ts); setSteps('stH', hs);
+  const tc = {cold:'#4aa3ff', ok:'#3fb950', hot:'#ff6b3d'}[ts];
+  $('thermoFill').style.transform = `scaleY(${Math.max(.05, clamp01((d.t - 10)/30)).toFixed(3)})`;   // escala 10-40 °C
+  for (const e of ['thermoFill', 'thermoBulb']) $(e).style.fill = tc;
+  $('dropFill').style.transform = `scaleY(${clamp01(d.h/100).toFixed(3)})`;
   const fogOn = d.fog > 20, fanOn = d.fan > 20;
-  $('hFog').classList.toggle('on', fogOn); $('tFog').textContent = fogOn ? '¡echando niebla!' : 'descansando';
-  $('hFan').classList.toggle('on', fanOn); $('tFan').textContent = fanOn ? '¡girando!' : 'descansando';
+  helper('hFog', 'tFog', fogOn); helper('hFan', 'tFan', fanOn);
   document.querySelectorAll('.puff').forEach(p => p.classList.toggle('on', fogOn));
   document.querySelectorAll('.wind').forEach(p => p.classList.toggle('on', fanOn));
   $('dH').textContent = d.h.toFixed(1); $('dT').textContent = d.t.toFixed(1); $('dS').textContent = d.sp;
@@ -554,9 +630,11 @@ const SC = {'😊 Todo bien':{h:null,t:24}, '🥵 Mucho calor':{h:null,t:32}, '�
             '🌧️ Muy mojado':{h:94,t:24}, '🥶 Mucho frío':{h:null,t:13}};
 function startDemo(){
   demo = true; $('demoBtn').style.display = 'none'; if (mq) mq.end(true); $('demo').classList.add('show'); badge('🎮 modo demostración', 'ok');
-  const box = $('demo'); box.innerHTML = '';
+  const box = $('demoRow'); box.innerHTML = '';
   for (const k in SC){ const b = document.createElement('button'); b.textContent = k;
-    b.onclick = () => { demoState.tgt = {h: SC[k].h ?? demoState.sp, t: SC[k].t}; }; box.appendChild(b); }
+    b.onclick = () => { demoState.tgt = {h: SC[k].h ?? demoState.sp, t: SC[k].t};
+      box.querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); };
+    box.appendChild(b); }
   setInterval(() => { const s = demoState;
     s.h += (s.tgt.h - s.h)*.12 + (Math.random()-.5)*.3; s.t += (s.tgt.t - s.t)*.12 + (Math.random()-.5)*.1;
     s.fog = s.h < s.sp ? Math.min(255, (s.sp - s.h)*25) : 0;
