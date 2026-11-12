@@ -64,38 +64,52 @@
   canvas#hist{width:100%;height:150px;background:#fff;border-radius:10px;border:2px solid var(--line)}
   #demo{display:none;margin:10px 0;gap:6px;flex-wrap:wrap}
   #demo.show{display:flex}
-  /* ---- caras y extras de la planta ---- */
-  .face>*{display:none}
-  svg[data-mood=happy] .m-happy,svg[data-mood=hot] .m-hot,svg[data-mood=thirsty] .m-thirsty,
-  svg[data-mood=wet] .m-wet,svg[data-mood=cold] .m-cold,svg[data-mood=sleep] .m-sleep{display:inline}
-  #scene{--petal:#ffd23f;--petal2:#ffb703;--disc:#9a6226;--tilt:0deg;--dy:0px}
-  #scene[data-mood=hot]{--petal:#ff7a52;--petal2:#e63d2a;--disc:#d4352a}
-  #scene[data-mood=thirsty]{--petal:#e8d98f;--petal2:#cdb96b;--disc:#7d5a34;--tilt:30deg;--dy:22px}
-  #scene[data-mood=wet]{--petal:#a8d8f5;--petal2:#6db6ec;--disc:#5d7ea8}
-  #scene[data-mood=cold]{--petal:#c4e6ff;--petal2:#92c9f0;--disc:#6a89b4}
-  #scene[data-mood=sleep]{--petal:#e8dca0;--petal2:#d4c680;--disc:#7d6a50;--tilt:12deg;--dy:8px}
-  .petal{fill:var(--petal);stroke:#8a5a00;stroke-width:2;transition:fill 1s}
+  /* ---- girasol: caras y extras se funden entre si; el movimiento lo calcula el JS en cada cuadro ---- */
+  #scene{--petal:#e8dca0;--petal2:#d4c680;--disc:#7d6a50;touch-action:manipulation}
+  .petal{fill:var(--petal);stroke:#8a5a00;stroke-width:2}
   .petal.b{fill:var(--petal2)}
-  #disc{fill:var(--disc);stroke:#5a3a12;stroke-width:3;transition:fill 1s}
-  #headrot{transform:translateY(var(--dy)) rotate(var(--tilt));transition:transform 1.2s cubic-bezier(.3,1.5,.5,1)}
-  #plant{transform-origin:200px 430px;animation:sway 4s ease-in-out infinite}
-  svg[data-mood=cold] #headrot{animation:shiver .18s linear infinite}
-  svg[data-mood=hot] #headrot{animation:pant .5s ease-in-out infinite}
-  @keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
-  @keyframes shiver{0%,100%{transform:translateX(-2px)}50%{transform:translateX(2px)}}
-  @keyframes pant{50%{transform:scale(1.03)}}
-  .extra{display:none}
-  svg[data-mood=hot] .x-hot,svg[data-mood=thirsty] .x-thirsty,svg[data-mood=wet] .x-wet,
-  svg[data-mood=cold] .x-cold,svg[data-mood=sleep] .x-sleep{display:inline}
-  .drip{animation:drip 1.2s ease-in infinite}.drip.d2{animation-delay:.4s}.drip.d3{animation-delay:.8s}
-  @keyframes drip{0%{transform:translateY(0);opacity:1}100%{transform:translateY(60px);opacity:0}}
-  .zzz{animation:zz 2s ease-in-out infinite;font:800 28px system-ui;fill:#fff;stroke:var(--ink);stroke-width:1.2}
-  @keyframes zz{50%{transform:translate(8px,-14px);opacity:.4}}
+  #disc{fill:var(--disc);stroke:#5a3a12;stroke-width:3}
+  #headHit{cursor:pointer}
+  .face>g,.extra{opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;
+    transition:opacity .35s ease,transform .55s cubic-bezier(.34,1.56,.64,1)}
+  #scene[data-mood=happy] .m-happy,#scene[data-mood=hot] .m-hot,#scene[data-mood=thirsty] .m-thirsty,
+  #scene[data-mood=wet] .m-wet,#scene[data-mood=cold] .m-cold,#scene[data-mood=sleep] .m-sleep,
+  #scene[data-mood=hot] .x-hot,#scene[data-mood=thirsty] .x-thirsty,#scene[data-mood=wet] .x-wet,
+  #scene[data-mood=cold] .x-cold,#scene[data-mood=sleep] .x-sleep{opacity:1;transform:none}
+  .eye{transform-box:fill-box;transform-origin:center;transition:transform .07s ease-in}
+  #scene.blink .eye{transform:scaleY(.08)}
+  .openeyes,.joyeyes{transition:opacity .15s}
+  .joyeyes{opacity:0}
+  #scene.joy .joyeyes{opacity:1} #scene.joy .openeyes{opacity:0}
+  .pant{transform-box:fill-box;transform-origin:50% 0;animation:pant .42s ease-in-out infinite alternate}
+  @keyframes pant{from{transform:scaleY(.72)}to{transform:scaleY(1.08)}}
+  .chatter{animation:chatter .11s steps(2) infinite}
+  @keyframes chatter{50%{transform:translateY(2px)}}
+  .nervous{animation:nervous 1.6s ease-in-out infinite}
+  @keyframes nervous{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+  .snore{transform-box:fill-box;transform-origin:0 50%;animation:snore 3.2s ease-in-out infinite alternate}
+  @keyframes snore{from{transform:scale(.25)}to{transform:scale(1.15)}}
+  .drip{animation:drip 1.3s ease-in infinite}.drip.d2{animation-delay:.45s}.drip.d3{animation-delay:.9s}
+  @keyframes drip{0%{transform:translateY(0);opacity:0}15%{opacity:1}100%{transform:translateY(55px);opacity:0}}
+  .heat{animation:heat 1.6s ease-in-out infinite;opacity:0}.heat.h2{animation-delay:.5s}.heat.h3{animation-delay:1s}
+  @keyframes heat{0%{transform:translateY(8px);opacity:0}40%{opacity:.9}100%{transform:translateY(-22px);opacity:0}}
+  .rain{animation:rain .8s linear infinite;opacity:0}.rain.r2{animation-delay:.27s}.rain.r3{animation-delay:.54s}
+  @keyframes rain{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(46px);opacity:0}}
+  .snow{transform-box:fill-box;transform-origin:center;animation:snow 3.4s linear infinite;opacity:0}
+  .snow.s2{animation-delay:.9s}.snow.s3{animation-delay:1.8s}.snow.s4{animation-delay:2.6s}
+  @keyframes snow{0%{transform:translate(0,0) rotate(0);opacity:0}15%{opacity:1}100%{transform:translate(14px,170px) rotate(220deg);opacity:0}}
+  .hop{animation:hop 1s ease-in-out infinite}
+  @keyframes hop{50%{transform:translateY(-8px)}}
+  .zzz{animation:zz 2.4s ease-in-out infinite;font:800 28px system-ui;fill:#fff;stroke:var(--ink);stroke-width:1.2;opacity:0}
+  @keyframes zz{0%{transform:translate(0,0);opacity:0}30%{opacity:1}100%{transform:translate(14px,-30px);opacity:0}}
+  .fxp{font-size:26px;text-anchor:middle;pointer-events:none;animation:fxup 1.3s ease-out forwards}
+  @keyframes fxup{0%{opacity:0;transform:translate(0,0) scale(.4)}15%{opacity:1}100%{opacity:0;transform:translate(var(--fx),-95px) scale(1.25)}}
   .wind{stroke:#fff;stroke-width:5;stroke-linecap:round;fill:none;opacity:0;transition:opacity .4s}
   .wind.on{opacity:.9;animation:wind .7s linear infinite}
   @keyframes wind{to{transform:translateX(-26px);opacity:.2}}
   .puff{fill:#fff;opacity:0}.puff.on{animation:puff 1.8s ease-out infinite}
   @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.9}100%{transform:translate(40px,-110px) scale(1.4);opacity:0}}
+  @media (prefers-reduced-motion:reduce){.pant,.chatter,.nervous,.drip,.heat,.rain,.snow,.hop,.zzz,.snore{animation-duration:4s}}
 </style>
 </head>
 <body>
@@ -130,57 +144,110 @@
           <path d="M-4 3 Q0 7 4 3" stroke="#fff" stroke-width="1.5" fill="none"/>
           <path class="wind" d="M-50 -14 H-86" /><path class="wind" d="M-54 4 H-96" style="animation-delay:.2s"/><path class="wind" d="M-50 22 H-84" style="animation-delay:.4s"/>
         </g>
-        <!-- planta -->
+        <!-- planta: tallo, hojas y cabeza los mueve el JS en cada cuadro -->
         <g id="plant">
-          <path d="M200 430 C200 380 198 300 200 240" stroke="#3f9b43" stroke-width="16" fill="none" stroke-linecap="round"/>
-          <path d="M200 380 C150 370 130 330 140 300 C180 305 200 340 200 380Z" fill="#59c05a" stroke="#2f7d3b" stroke-width="3"/>
-          <path d="M200 350 C250 345 272 310 262 280 C222 285 200 315 200 350Z" fill="#59c05a" stroke="#2f7d3b" stroke-width="3"/>
-          <g transform="translate(200 215)"><g id="headrot">
-            <g id="petals"></g>
-            <circle id="disc" r="58"/>
-            <g class="face">
-              <!-- feliz -->
-              <g class="m-happy"><ellipse cx="-20" cy="-10" rx="8" ry="11" fill="#2b1a08"/><ellipse cx="20" cy="-10" rx="8" ry="11" fill="#2b1a08"/>
-                <circle cx="-17" cy="-14" r="3" fill="#fff"/><circle cx="23" cy="-14" r="3" fill="#fff"/>
-                <path d="M-22 18 Q0 44 22 18" fill="#fff" stroke="#2b1a08" stroke-width="4" stroke-linejoin="round"/>
-                <circle cx="-38" cy="12" r="8" fill="#ff8fa3" opacity=".7"/><circle cx="38" cy="12" r="8" fill="#ff8fa3" opacity=".7"/></g>
-              <!-- calor -->
-              <g class="m-hot"><path d="M-30 -18 L-12 -8 L-30 2 M30 -18 L12 -8 L30 2" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-                <ellipse cx="0" cy="28" rx="15" ry="14" fill="#7a0f0f" stroke="#2b1a08" stroke-width="3"/>
-                <path d="M-8 34 Q0 52 8 34Z" fill="#ff8fa3" stroke="#2b1a08" stroke-width="2"/></g>
-              <!-- sed -->
-              <g class="m-thirsty"><ellipse cx="-20" cy="-6" rx="8" ry="10" fill="#2b1a08"/><ellipse cx="20" cy="-6" rx="8" ry="10" fill="#2b1a08"/>
-                <circle cx="-17" cy="-10" r="3" fill="#fff"/><circle cx="23" cy="-10" r="3" fill="#fff"/>
-                <path d="M-32 -26 L-10 -18 M32 -26 L10 -18" stroke="#2b1a08" stroke-width="4" stroke-linecap="round"/>
-                <path d="M-16 34 Q0 20 16 34" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/></g>
-              <!-- mucha agua -->
-              <g class="m-wet"><circle cx="-20" cy="-8" r="13" fill="#fff" stroke="#2b1a08" stroke-width="3"/><circle cx="20" cy="-8" r="13" fill="#fff" stroke="#2b1a08" stroke-width="3"/>
-                <circle cx="-18" cy="-6" r="4" fill="#2b1a08"/><circle cx="22" cy="-6" r="4" fill="#2b1a08"/>
-                <path d="M-20 28 Q-10 18 0 28 T20 28" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/></g>
-              <!-- frio -->
-              <g class="m-cold"><path d="M-30 -8 Q-20 -18 -10 -8 M10 -8 Q20 -18 30 -8" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/>
-                <path d="M-16 30 l6 -8 l6 8 l6 -8 l6 8 l6 -8 l6 8" fill="none" stroke="#2b1a08" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-                <circle cx="-38" cy="12" r="8" fill="#8fc7f0" opacity=".8"/><circle cx="38" cy="12" r="8" fill="#8fc7f0" opacity=".8"/></g>
-              <!-- dormido -->
-              <g class="m-sleep"><path d="M-30 -8 Q-20 2 -10 -8 M10 -8 Q20 2 30 -8" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/>
-                <ellipse cx="0" cy="28" rx="7" ry="5" fill="#2b1a08"/></g>
-            </g>
-            <!-- extras -->
-            <g class="extra x-hot"><path class="drip" d="M-70 -50 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
-              <path class="drip d2" d="M70 -40 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
-              <path class="drip d3" d="M-10 -100 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/></g>
-            <g class="extra x-thirsty"><path d="M80 -70 q16 26 0 40 q-16 -14 0 -40Z" fill="none" stroke="#2b7de9" stroke-width="4" stroke-dasharray="6 5"/>
-              <text x="70" y="-84" font-size="26" fill="#2b7de9" font-weight="800">?</text></g>
-            <g class="extra x-wet"><path class="drip" d="M-60 -90 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
-              <path class="drip d2" d="M20 -110 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
-              <path class="drip d3" d="M70 -80 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/></g>
-            <g class="extra x-cold"><text x="-100" y="-60" font-size="30">❄️</text><text x="70" y="-30" font-size="24">❄️</text></g>
-            <g class="extra x-sleep"><text class="zzz" x="60" y="-70">Z</text><text class="zzz" x="82" y="-96" style="animation-delay:.5s">z</text></g>
-          </g></g>
+          <path id="stem" d="M200 430 C200 385 200 320 200 240" stroke="#3f9b43" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <path id="stemHi" d="M200 430 C200 385 200 320 200 240" stroke="#7ad87a" stroke-width="4" fill="none" stroke-linecap="round" opacity=".55" transform="translate(-4 0)"/>
+          <g id="leafL" transform="translate(200 380)">
+            <path d="M0 0 C-50 -10 -70 -50 -60 -80 C-20 -75 0 -40 0 0Z" fill="#59c05a" stroke="#2f7d3b" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M0 0 C-20 -25 -38 -50 -57 -76" fill="none" stroke="#2f7d3b" stroke-width="2" opacity=".55"/></g>
+          <g id="leafR" transform="translate(200 350)">
+            <path d="M0 0 C50 -5 72 -40 62 -70 C22 -65 0 -35 0 0Z" fill="#59c05a" stroke="#2f7d3b" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M0 0 C22 -20 40 -42 60 -66" fill="none" stroke="#2f7d3b" stroke-width="2" opacity=".55"/></g>
           <!-- maceta -->
           <path d="M130 430 H270 L254 478 H146Z" fill="#d9774a" stroke="#8a3f1f" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M150 446 H250" stroke="#f2a07a" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+          <ellipse cx="200" cy="421" rx="70" ry="7" fill="#6b4226"/>
           <rect x="122" y="420" width="156" height="20" rx="8" fill="#e8895a" stroke="#8a3f1f" stroke-width="4"/>
+          <g id="head" transform="translate(200 215)">
+            <g id="petalsB"></g><g id="petalsA"></g>
+            <circle id="disc" r="58"/>
+            <g id="seeds"></g>
+            <g id="face" class="face">
+              <!-- feliz (al tocarla cierra los ojos de alegria) -->
+              <g class="m-happy">
+                <g class="openeyes">
+                  <g class="eye"><ellipse cx="-21" cy="-10" rx="9" ry="12" fill="#2b1a08"/><circle cx="-18" cy="-15" r="3.6" fill="#fff"/><circle cx="-24" cy="-5" r="1.6" fill="#fff"/></g>
+                  <g class="eye"><ellipse cx="21" cy="-10" rx="9" ry="12" fill="#2b1a08"/><circle cx="24" cy="-15" r="3.6" fill="#fff"/><circle cx="18" cy="-5" r="1.6" fill="#fff"/></g>
+                </g>
+                <path class="joyeyes" d="M-31 -6 Q-21 -22 -11 -6 M11 -6 Q21 -22 31 -6" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/>
+                <path d="M-31 -31 Q-21 -37 -11 -32 M11 -32 Q21 -37 31 -31" fill="none" stroke="#2b1a08" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M-24 14 Q0 48 24 14 Q0 22 -24 14Z" fill="#6b1d0e" stroke="#2b1a08" stroke-width="3.5" stroke-linejoin="round"/>
+                <path d="M-10 27 Q0 21 10 27 Q0 33 -10 27Z" fill="#ff7f8f"/>
+                <ellipse cx="-39" cy="12" rx="9" ry="6" fill="#ff8fa3" opacity=".75"/><ellipse cx="39" cy="12" rx="9" ry="6" fill="#ff8fa3" opacity=".75"/>
+              </g>
+              <!-- calor: ojos apretados, jadeando con la lengua afuera -->
+              <g class="m-hot">
+                <path d="M-32 -20 L-13 -9 L-32 1 M32 -20 L13 -9 L32 1" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M-33 -33 L-14 -27 M33 -33 L14 -27" stroke="#2b1a08" stroke-width="3.5" stroke-linecap="round"/>
+                <g class="pant"><ellipse cx="0" cy="26" rx="14" ry="12" fill="#6b1d0e" stroke="#2b1a08" stroke-width="3.5"/>
+                  <path d="M-7 29 Q-8 46 0 46 Q8 46 7 29Z" fill="#ff7f8f" stroke="#2b1a08" stroke-width="2"/></g>
+                <ellipse cx="-39" cy="12" rx="10" ry="6" fill="#ff2d2d" opacity=".5"/><ellipse cx="39" cy="12" rx="10" ry="6" fill="#ff2d2d" opacity=".5"/>
+              </g>
+              <!-- sed: parpados caidos, cejas tristes, lengua seca -->
+              <g class="m-thirsty">
+                <g class="eye"><ellipse cx="-21" cy="-6" rx="8.5" ry="10" fill="#2b1a08"/><circle cx="-18" cy="-3" r="2.6" fill="#fff"/></g>
+                <g class="eye"><ellipse cx="21" cy="-6" rx="8.5" ry="10" fill="#2b1a08"/><circle cx="24" cy="-3" r="2.6" fill="#fff"/></g>
+                <path d="M-32 -6 Q-21 -28 -10 -6Z M10 -6 Q21 -28 32 -6Z" fill="var(--disc)"/>
+                <path d="M-32 -6 Q-21 -3 -10 -6 M10 -6 Q21 -3 32 -6" fill="none" stroke="#2b1a08" stroke-width="3" stroke-linecap="round"/>
+                <path d="M-33 -22 L-12 -29 M33 -22 L12 -29" stroke="#2b1a08" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M-16 34 Q-8 26 0 30 Q8 26 16 34" fill="none" stroke="#2b1a08" stroke-width="4.5" stroke-linecap="round"/>
+                <path d="M5 30 Q4 42 11 42 Q16 40 13 30Z" fill="#e88a95" stroke="#2b1a08" stroke-width="2"/>
+              </g>
+              <!-- mucha agua: ojos grandes y nerviosos, boca ondulada -->
+              <g class="m-wet">
+                <circle cx="-21" cy="-8" r="13" fill="#fff" stroke="#2b1a08" stroke-width="3"/><circle cx="21" cy="-8" r="13" fill="#fff" stroke="#2b1a08" stroke-width="3"/>
+                <g class="nervous"><circle cx="-19" cy="-5" r="5" fill="#2b1a08"/><circle cx="-17" cy="-7" r="1.6" fill="#fff"/>
+                  <circle cx="23" cy="-5" r="5" fill="#2b1a08"/><circle cx="25" cy="-7" r="1.6" fill="#fff"/></g>
+                <path d="M-33 -26 L-12 -33 M33 -26 L12 -33" stroke="#2b1a08" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M-20 30 Q-10 22 0 30 T20 30" fill="none" stroke="#2b1a08" stroke-width="4.5" stroke-linecap="round"/>
+                <ellipse cx="-39" cy="14" rx="9" ry="6" fill="#8fc7f0" opacity=".8"/><ellipse cx="39" cy="14" rx="9" ry="6" fill="#8fc7f0" opacity=".8"/>
+              </g>
+              <!-- frio: ojos apretados, dientes que castanean, nariz azul -->
+              <g class="m-cold">
+                <path d="M-31 -6 Q-21 -16 -11 -6 M11 -6 Q21 -16 31 -6" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/>
+                <path d="M-32 -26 L-12 -30 M32 -26 L12 -30" stroke="#2b1a08" stroke-width="3.5" stroke-linecap="round"/>
+                <g class="chatter"><rect x="-15" y="20" width="30" height="13" rx="4" fill="#fff" stroke="#2b1a08" stroke-width="3"/>
+                  <path d="M-15 26.5 H15 M-7 20 V33 M0 20 V33 M7 20 V33" stroke="#2b1a08" stroke-width="1.6"/></g>
+                <circle cx="0" cy="9" r="4.5" fill="#5f9fe0"/>
+                <ellipse cx="-39" cy="12" rx="9" ry="6" fill="#8fc7f0" opacity=".85"/><ellipse cx="39" cy="12" rx="9" ry="6" fill="#8fc7f0" opacity=".85"/>
+              </g>
+              <!-- dormida: ojos cerrados y burbuja de ronquido -->
+              <g class="m-sleep">
+                <path d="M-31 -8 Q-21 1 -11 -8 M11 -8 Q21 1 31 -8" fill="none" stroke="#2b1a08" stroke-width="5" stroke-linecap="round"/>
+                <ellipse cx="-2" cy="26" rx="6" ry="4.5" fill="#6b1d0e" stroke="#2b1a08" stroke-width="2.5"/>
+                <circle class="snore" cx="16" cy="14" r="8" fill="#d8f2ff" stroke="#8cc8ea" stroke-width="2" opacity=".85"/>
+              </g>
+            </g>
+            <!-- extras de cada estado -->
+            <g class="extra x-hot">
+              <path class="drip" d="M-64 -44 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
+              <path class="drip d2" d="M62 -34 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
+              <path class="drip d3" d="M-40 -64 q8 14 0 20 q-8 -6 0 -20Z" fill="#6cc7ff" stroke="#2b7de9" stroke-width="2"/>
+              <path class="heat" d="M54 -108 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#ff7a3c" stroke-width="4" stroke-linecap="round"/>
+              <path class="heat h2" d="M84 -96 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#ff7a3c" stroke-width="4" stroke-linecap="round"/>
+              <path class="heat h3" d="M112 -80 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#ff7a3c" stroke-width="4" stroke-linecap="round"/>
+            </g>
+            <g class="extra x-thirsty"><g class="hop">
+              <path d="M88 -78 q16 26 0 40 q-16 -14 0 -40Z" fill="#ffffffaa" stroke="#2b7de9" stroke-width="4" stroke-dasharray="6 5"/>
+              <text x="80" y="-90" font-size="26" fill="#2b7de9" font-weight="800">?</text></g></g>
+            <g class="extra x-wet">
+              <g transform="translate(88 -128) scale(.9)"><circle cx="-18" cy="0" r="14" fill="#a9c2dc"/><circle cx="2" cy="-8" r="18" fill="#a9c2dc"/>
+                <circle cx="22" cy="2" r="13" fill="#a9c2dc"/><rect x="-30" y="0" width="52" height="14" rx="7" fill="#a9c2dc"/>
+                <path class="rain" d="M-16 18 v8" stroke="#2b7de9" stroke-width="4" stroke-linecap="round"/>
+                <path class="rain r2" d="M0 18 v8" stroke="#2b7de9" stroke-width="4" stroke-linecap="round"/>
+                <path class="rain r3" d="M16 18 v8" stroke="#2b7de9" stroke-width="4" stroke-linecap="round"/></g>
+            </g>
+            <g class="extra x-cold">
+              <text class="snow" x="-95" y="-120" font-size="22">❄️</text><text class="snow s2" x="70" y="-130" font-size="18">❄️</text>
+              <text class="snow s3" x="-30" y="-150" font-size="16">❄️</text><text class="snow s4" x="40" y="-145" font-size="20">❄️</text>
+            </g>
+            <g class="extra x-sleep"><text class="zzz" x="60" y="-70">Z</text><text class="zzz" x="80" y="-92" style="animation-delay:.8s">z</text>
+              <text class="zzz" x="96" y="-112" style="animation-delay:1.6s;font-size:20px">z</text></g>
+            <circle id="headHit" r="112" fill="transparent"/>
+          </g>
         </g>
+        <g id="fx"></g>
       </svg>
       <div class="bubble" id="bubble">Despertando…<small>Esperando datos del sensor</small></div>
       <div class="hearts" id="hearts">🤍🤍🤍🤍🤍</div>
@@ -237,15 +304,6 @@ let demo = Q.has('demo') || (!/^https?:$/.test(location.protocol) && !Q.get('esp
 const CLOUD = !demo && !!CFG && !!window.mqtt && !Q.get('esp');                              // con config.js => nube
 const TOL_H = 5, T_MIN = 18;                                         // margen de humedad y temperatura minima comoda
 
-// ---- petalos ----
-(function(){ const g = $('petals'), NS = 'http://www.w3.org/2000/svg';
-  for (let layer=0; layer<2; layer++) for (let k=0;k<12;k++){
-    const e = document.createElementNS(NS,'ellipse');
-    e.setAttribute('cx',0); e.setAttribute('cy',-84); e.setAttribute('rx',17); e.setAttribute('ry',40);
-    e.setAttribute('class','petal'+(layer?'':' b'));
-    e.setAttribute('transform',`rotate(${k*30+(layer?15:0)})`); g.appendChild(e);
-  }})();
-
 const MOODS = {
   happy:  ['¡Estoy feliz! 🌞', 'Tengo el agua y el calor justos.'],
   hot:    ['¡Uf, tengo mucho calor! 🥵', 'El molinillo me está dando aire fresco.'],
@@ -284,8 +342,111 @@ function setMood(m){                                       // exige 2 lecturas s
   if (m === pending) pendingN++; else { pending = m; pendingN = 1; }
   if (pendingN >= 2 || m === 'sleep' || mood === 'sleep'){ apply(m); }   // dormir o despertar es inmediato
 }
-function apply(m){ mood = m; pending = null;
-  $('scene').dataset.mood = m; $('bubble').innerHTML = MOODS[m][0] + '<small>' + MOODS[m][1] + '</small>'; }
+function apply(m){ const prev = mood; mood = m; pending = null;
+  $('scene').dataset.mood = m; setBubble();
+  if (prev !== m){ sqv += 2.2*RM; if (m === 'happy') burst('✨', 6); }   // brinquito al cambiar de animo
+}
+function setBubble(){ if (Date.now() < tickleUntil) return;
+  $('bubble').innerHTML = MOODS[mood][0] + '<small>' + MOODS[mood][1] + '</small>'; }
+
+// ---- animacion del girasol: un solo bucle por cuadro, todo se interpola suavemente ----
+const NS = 'http://www.w3.org/2000/svg', SCN = $('scene');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches ? .3 : 1;   // menos movimiento si el sistema lo pide
+(function(){
+  for (const [id, off, cls] of [['petalsB', 0, 'petal b'], ['petalsA', 15, 'petal']]) for (let k = 0; k < 12; k++){
+    const e = document.createElementNS(NS, 'ellipse');
+    e.setAttribute('cx', 0); e.setAttribute('cy', -84); e.setAttribute('rx', 17); e.setAttribute('ry', 40);
+    e.setAttribute('class', cls); e.setAttribute('transform', `rotate(${k*30 + off})`); $(id).appendChild(e);
+  }
+  for (let k = 0; k < 20; k++){                               // semillitas alrededor del disco
+    const c = document.createElementNS(NS, 'circle'), a = k/20*Math.PI*2;
+    c.setAttribute('cx', (Math.cos(a)*47).toFixed(1)); c.setAttribute('cy', (Math.sin(a)*47).toFixed(1));
+    c.setAttribute('r', 2.2); c.setAttribute('fill', 'rgba(0,0,0,.15)'); $('seeds').appendChild(c);
+  }
+})();
+
+// Pose de cada estado: desplazamiento y giro de la cabeza, caida de hojas, respiracion
+// (amplitud y velocidad), vaiven de petalos, temblor, tamano de petalos y colores.
+const POSE = {
+  happy:  {dx:0,  dy:0,  tilt:0,  leaf:0,  bob:4,   spd:1.1,  sway:3,  shiver:0,   ps:1,   petal:[255,210,63],  petal2:[255,183,3],   disc:[154,98,38]},
+  hot:    {dx:0,  dy:6,  tilt:-3, leaf:12, bob:2.5, spd:2.6,  sway:1,  shiver:0,   ps:.97, petal:[255,122,82],  petal2:[230,61,42],   disc:[200,62,40]},
+  thirsty:{dx:26, dy:34, tilt:30, leaf:38, bob:1.5, spd:.6,   sway:.8, shiver:0,   ps:.9,  petal:[232,217,143], petal2:[205,185,107], disc:[125,90,52]},
+  wet:    {dx:-6, dy:2,  tilt:-6, leaf:-8, bob:3,   spd:.9,   sway:2,  shiver:0,   ps:.98, petal:[168,216,245], petal2:[109,182,236], disc:[93,126,168]},
+  cold:   {dx:0,  dy:12, tilt:0,  leaf:24, bob:.6,  spd:1,    sway:.5, shiver:1.8, ps:.92, petal:[196,230,255], petal2:[146,201,240], disc:[106,137,180]},
+  sleep:  {dx:12, dy:18, tilt:16, leaf:20, bob:5,   spd:.45,  sway:1,  shiver:0,   ps:.95, petal:[232,220,160], petal2:[212,198,128], disc:[125,106,80]}
+};
+const A = structuredClone(POSE.sleep);                        // pose actual (se acerca a la pose objetivo)
+const lerp = (a, b, k) => a + (b - a)*k, rgb = c => `rgb(${c.map(Math.round).join(',')})`;
+const bez = (t, p0, p1, p2, p3) => { const u = 1 - t; return u*u*u*p0 + 3*u*u*t*p1 + 3*u*t*t*p2 + t*t*t*p3; };
+let phase = 0, clock = 0, sq = 0, sqv = 0, lx = 0, ly = 0, tlx = 0, tly = 0, ptrT = -1e9, wanderT = 0, blinkT = 2;
+let hxNow = 200, hyNow = 215, tPrev = performance.now(), tickleUntil = 0;
+
+function frame(now){
+  const dt = Math.min(.05, (now - tPrev)/1000); tPrev = now; clock += dt;
+  const T = POSE[mood], k = 1 - Math.exp(-dt*3);              // misma suavidad a 30, 60 o 120 fps
+  for (const key in T){ const v = T[key];
+    if (Array.isArray(v)) for (let i = 0; i < 3; i++) A[key][i] = lerp(A[key][i], v[i], k); else A[key] = lerp(A[key], v, k); }
+  phase += dt*A.spd*Math.PI*2;                                 // fase acumulada: cambiar de ritmo no da saltos
+  sqv += (-170*sq - 11*sqv)*dt; sq += sqv*dt;                  // resorte para aplastar y estirar
+  const bob = Math.sin(phase)*A.bob*RM, sway = Math.sin(clock*.8)*4*RM, shake = Math.sin(clock*55)*A.shiver*RM;
+  const hx = 200 + A.dx + sway + shake, hy = 215 + A.dy + bob;
+  const tilt = A.tilt + Math.sin(clock*.8 + .6)*A.sway*RM, s = 1 + sq + Math.sin(phase)*.012*RM;
+  hxNow = hx; hyNow = hy;
+  $('head').setAttribute('transform', `translate(${hx.toFixed(2)} ${hy.toFixed(2)}) rotate(${tilt.toFixed(2)}) scale(${s.toFixed(4)} ${(2 - s).toFixed(4)})`);
+  // tallo: curva desde la maceta hasta la cabeza; las hojas van pegadas a la curva
+  const x0 = 200, y0 = 430, x1 = 200, y1 = 385, x2 = 200 + (hx - 200)*.25, y2 = (y0 + hy)/2 + 10, x3 = hx, y3 = hy + 25;
+  const d = `M${x0} ${y0} C${x1} ${y1} ${x2.toFixed(1)} ${y2.toFixed(1)} ${x3.toFixed(1)} ${y3.toFixed(1)}`;
+  $('stem').setAttribute('d', d); $('stemHi').setAttribute('d', d);
+  for (const [id, t, sgn, ph] of [['leafL', .32, -1, 0], ['leafR', .5, 1, 1.3]]){
+    const ang = sgn*A.leaf + Math.sin(clock*1.6 + ph)*3*RM;
+    $(id).setAttribute('transform', `translate(${bez(t, x0, x1, x2, x3).toFixed(1)} ${bez(t, y0, y1, y2, y3).toFixed(1)}) rotate(${ang.toFixed(2)})`);
+  }
+  $('petalsB').setAttribute('transform', `rotate(${(Math.sin(phase*.5)*A.sway).toFixed(2)}) scale(${A.ps.toFixed(3)})`);
+  $('petalsA').setAttribute('transform', `rotate(${(-Math.sin(phase*.5 + .8)*A.sway*.7).toFixed(2)}) scale(${(A.ps*1.01).toFixed(3)})`);
+  SCN.style.setProperty('--petal', rgb(A.petal)); SCN.style.setProperty('--petal2', rgb(A.petal2)); SCN.style.setProperty('--disc', rgb(A.disc));
+  // mirada: sigue al cursor; si nadie lo mueve, mira a su alrededor
+  if (mood === 'sleep'){ tlx = 0; tly = .25; }
+  else if (now - ptrT > 3000 && clock > wanderT){
+    wanderT = clock + 1.5 + Math.random()*2.5;
+    tlx = Math.random() < .35 ? 0 : (Math.random()*2 - 1)*.7; tly = (Math.random()*2 - 1)*.4;
+  }
+  const kl = 1 - Math.exp(-dt*7); lx = lerp(lx, tlx, kl); ly = lerp(ly, tly, kl);
+  $('face').setAttribute('transform', `translate(${(lx*7).toFixed(2)} ${(ly*5).toFixed(2)})`);
+  if (clock > blinkT){                                         // parpadeo; a veces doble
+    SCN.classList.add('blink'); setTimeout(() => SCN.classList.remove('blink'), 130);
+    blinkT = clock + (Math.random() < .2 ? .28 : 2.2 + Math.random()*3);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+addEventListener('pointermove', e => {
+  const r = $('disc').getBoundingClientRect(), cx = r.left + r.width/2, cy = r.top + r.height/2;
+  tlx = Math.max(-1, Math.min(1, (e.clientX - cx)/300)); tly = Math.max(-1, Math.min(1, (e.clientY - cy)/300)); ptrT = performance.now();
+});
+
+// particulas (corazones, gotas, chispas) que salen de la cabeza
+function burst(ch, n){
+  for (let i = 0; i < n; i++){
+    const t = document.createElementNS(NS, 'text');
+    t.textContent = ch; t.setAttribute('class', 'fxp');
+    t.setAttribute('x', (hxNow + (Math.random()*80 - 40)).toFixed(0)); t.setAttribute('y', (hyNow - 40 - Math.random()*30).toFixed(0));
+    t.style.setProperty('--fx', (Math.random()*60 - 30).toFixed(0) + 'px'); t.style.animationDelay = (Math.random()*.25).toFixed(2) + 's';
+    t.addEventListener('animationend', () => t.remove()); $('fx').appendChild(t);
+  }
+}
+// al tocar el girasol: brinca, reacciona segun su estado y dice algo
+const TICKLE = {happy:'¡Jiji, me haces cosquillas! 😆', hot:'¡Qué calor! ¿Me soplas? 🥵', thirsty:'¿Me das agüita, porfa? 💧',
+                wet:'¡Estoy empapada! 🌧️', cold:'¡Brrr! ¿Me das un abrazo? 🥶', sleep:'Mmm… cinco minutitos más 😴'};
+const FXCH = {happy:'💛', hot:'💦', thirsty:'💧', wet:'💧', cold:'❄️', sleep:'💤'};
+let joyTimer, tickleTimer;
+$('headHit').addEventListener('pointerdown', () => {
+  sqv += 3.2*RM;
+  if (mood === 'happy'){ SCN.classList.add('joy'); clearTimeout(joyTimer); joyTimer = setTimeout(() => SCN.classList.remove('joy'), 1400); }
+  burst(FXCH[mood], 5);
+  tickleUntil = Date.now() + 2200; $('bubble').textContent = TICKLE[mood];
+  clearTimeout(tickleTimer); tickleTimer = setTimeout(() => { tickleUntil = 0; setBubble(); }, 2200);
+});
 
 // ---- pintar datos ----
 const hist = {h:[], t:[]};
