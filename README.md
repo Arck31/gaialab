@@ -1,7 +1,9 @@
 ﻿# GaiaLab - Dashboard del girasol
 
-Panel para ninos que muestra la humedad y la temperatura de un terrario en tiempo real.
+Panel para niños que muestra la humedad y la temperatura de un terrario en tiempo real.
 El girasol cambia de animo: feliz, con sed, con calor, con frio...
+
+-Proyecto universitario de Tecnología de la información.
 
 - Datos: ESP32 -> EMQX Cloud (MQTT sobre TLS) -> esta pagina (WebSocket seguro).
 - Boton **Demo**: muestra los escenarios sin necesitar el modulo.
