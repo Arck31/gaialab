@@ -143,8 +143,29 @@
   .wind{stroke:#fff;stroke-width:5;stroke-linecap:round;fill:none;opacity:0;transition:opacity .4s}
   .wind.on{opacity:.9;animation:wind .7s linear infinite}
   @keyframes wind{to{transform:translateX(-26px);opacity:.2}}
-  .puff{fill:#fff;opacity:0}.puff.on{animation:puff 1.8s ease-out infinite}
-  @keyframes puff{0%{transform:translate(0,0) scale(.4);opacity:.9}100%{transform:translate(40px,-110px) scale(1.4);opacity:0}}
+  /* nebulizador: apagado duerme; encendido vibra, brilla y echa rocio hacia la planta */
+  #helperNebu .mist{fill:#e3f4ff;stroke:#5fb0ea;stroke-width:2.5;opacity:0;transform-box:fill-box;transform-origin:center}
+  #helperNebu .spray{opacity:0;transition:opacity .5s}
+  #helperNebu.on .spray{animation:spray 1.4s ease-in-out infinite}
+  @keyframes spray{0%,100%{opacity:.55}50%{opacity:1}}
+  #helperNebu .spark{fill:#1f8fe8;opacity:0;transform-box:fill-box;transform-origin:center}
+  #helperNebu.on .mist{animation:mist 2.7s ease-out infinite}
+  #helperNebu.on .spark{animation:spark 1.65s ease-in infinite}
+  @keyframes mist{0%{transform:translate(0,0) scale(.3);opacity:0}12%{opacity:.95}100%{transform:translate(var(--mx),var(--my)) scale(1.7);opacity:0}}
+  @keyframes spark{0%{transform:translate(0,0) scale(.6);opacity:0}20%{opacity:1}100%{transform:translate(var(--mx),var(--my)) scale(1);opacity:0}}
+  #helperNebu .glow{opacity:0;transition:opacity .4s}
+  #helperNebu.on .glow{opacity:1;animation:pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+  #helperNebu .nbody{transform-box:fill-box;transform-origin:50% 100%}
+  #helperNebu.on .nbody{animation:hum .22s linear infinite}
+  @keyframes hum{0%,100%{transform:translateX(0)}25%{transform:translateX(-1px)}75%{transform:translateX(1px)}}
+  #helperNebu .water{transform-box:fill-box;transform-origin:50% 100%}
+  #helperNebu.on .water{animation:slosh 1.2s ease-in-out infinite alternate}
+  @keyframes slosh{from{transform:scaleY(1)}to{transform:scaleY(.82)}}
+  #helperNebu .nface-on,#helperNebu.on .nface-off{display:none}
+  #helperNebu.on .nface-on{display:inline}
+  #helperNebu .ntag{opacity:0;transform:translateY(8px) scale(.8);transform-box:fill-box;transform-origin:50% 100%;
+    transition:opacity .3s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+  #helperNebu.on .ntag{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.pant,.chatter,.nervous,.drip,.heat,.rain,.snow,.hop,.zzz,.snore{animation-duration:4s}}
 </style>
 </head>
@@ -164,11 +185,47 @@
       <svg id="scene" viewBox="0 0 400 480" data-mood="sleep" role="img" aria-label="Girasol">
         <!-- ayudantes -->
         <g id="helperNebu">
-          <rect x="12" y="410" width="64" height="40" rx="10" fill="#7fd6e8" stroke="#2c7d8c" stroke-width="3"/>
-          <circle cx="30" cy="428" r="5" fill="#fff"/><circle cx="58" cy="428" r="5" fill="#fff"/>
-          <path d="M34 438 Q44 446 54 438" fill="none" stroke="#2c7d8c" stroke-width="3" stroke-linecap="round"/>
-          <circle class="puff" cx="44" cy="408" r="14"/><circle class="puff" cx="44" cy="408" r="10" style="animation-delay:.6s"/>
-          <circle class="puff" cx="44" cy="408" r="12" style="animation-delay:1.2s"/>
+          <!-- rocio: sube desde la boquilla hacia la planta (solo cuando esta encendido) -->
+          <defs><linearGradient id="sprayGrad" x1="50" y1="394" x2="160" y2="270" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#3fa2f0" stop-opacity=".7"/><stop offset="1" stop-color="#8fd0ff" stop-opacity="0"/></linearGradient></defs>
+          <path class="spray" d="M44 394 L56 394 L205 300 L120 238 Z" fill="url(#sprayGrad)"/>
+          <g class="plume">
+            <circle class="mist" cx="50" cy="394" r="15" style="--mx:70px;--my:-150px"/>
+            <circle class="mist" cx="50" cy="394" r="12" style="--mx:100px;--my:-120px;animation-delay:.45s"/>
+            <circle class="mist" cx="50" cy="394" r="17" style="--mx:55px;--my:-185px;animation-delay:.9s"/>
+            <circle class="mist" cx="50" cy="394" r="13" style="--mx:115px;--my:-165px;animation-delay:1.35s"/>
+            <circle class="mist" cx="50" cy="394" r="16" style="--mx:85px;--my:-200px;animation-delay:1.8s"/>
+            <circle class="mist" cx="50" cy="394" r="11" style="--mx:125px;--my:-105px;animation-delay:2.25s"/>
+            <circle class="mist" cx="50" cy="394" r="14" style="--mx:95px;--my:-150px;animation-delay:.2s"/>
+            <circle class="mist" cx="50" cy="394" r="12" style="--mx:140px;--my:-125px;animation-delay:1.1s"/>
+            <circle class="mist" cx="50" cy="394" r="15" style="--mx:75px;--my:-175px;animation-delay:2s"/>
+            <path class="spark" d="M50 392 q5 8 0 12 q-5 -4 0 -12Z" style="--mx:80px;--my:-95px"/>
+            <path class="spark" d="M50 392 q5 8 0 12 q-5 -4 0 -12Z" style="--mx:120px;--my:-140px;animation-delay:.55s"/>
+            <path class="spark" d="M50 392 q5 8 0 12 q-5 -4 0 -12Z" style="--mx:60px;--my:-130px;animation-delay:1.1s"/>
+            <path class="spark" d="M50 392 q5 8 0 12 q-5 -4 0 -12Z" style="--mx:140px;--my:-105px;animation-delay:.3s"/>
+            <path class="spark" d="M50 392 q5 8 0 12 q-5 -4 0 -12Z" style="--mx:100px;--my:-175px;animation-delay:.85s"/>
+          </g>
+          <!-- cartel -->
+          <g class="ntag">
+            <rect x="4" y="330" width="104" height="26" rx="13" fill="#2b8cf0" stroke="#fff" stroke-width="2"/>
+            <text x="56" y="348" font-size="14" font-weight="800" fill="#fff" text-anchor="middle">¡Rociando! 💦</text>
+          </g>
+          <!-- cuerpo -->
+          <ellipse cx="50" cy="459" rx="40" ry="6" fill="#000" opacity=".12"/>
+          <g class="nbody">
+            <rect x="40" y="396" width="20" height="16" rx="5" fill="#5fc3d8" stroke="#2c7d8c" stroke-width="3"/>
+            <ellipse class="glow" cx="50" cy="396" rx="15" ry="5" fill="#bdf0ff"/>
+            <rect x="14" y="408" width="72" height="48" rx="14" fill="#7fd6e8" stroke="#2c7d8c" stroke-width="3"/>
+            <rect x="23" y="418" width="24" height="30" rx="6" fill="#e9fbff" stroke="#2c7d8c" stroke-width="2"/>
+            <rect class="water" x="25.5" y="430" width="19" height="16" rx="4" fill="#4fb3ff"/>
+            <path d="M27 434 h15" stroke="#bfe6ff" stroke-width="2" stroke-linecap="round"/>
+            <g class="nface-off"><path d="M56 427 q4 3 8 0 M68 427 q4 3 8 0" fill="none" stroke="#2c7d8c" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M62 438 q4 3 8 0" fill="none" stroke="#2c7d8c" stroke-width="2.5" stroke-linecap="round"/></g>
+            <g class="nface-on"><circle cx="60" cy="426" r="3.4" fill="#173f48"/><circle cx="72" cy="426" r="3.4" fill="#173f48"/>
+              <circle cx="61" cy="425" r="1.1" fill="#fff"/><circle cx="73" cy="425" r="1.1" fill="#fff"/>
+              <ellipse cx="66" cy="438" rx="3.5" ry="4.5" fill="#173f48"/>
+              <circle cx="55" cy="433" r="3" fill="#ff8fa3" opacity=".7"/><circle cx="77" cy="433" r="3" fill="#ff8fa3" opacity=".7"/></g>
+          </g>
         </g>
         <g id="helperFan" transform="translate(350 360)">
           <rect x="-6" y="30" width="12" height="70" fill="#9aa5a8"/><rect x="-28" y="96" width="56" height="10" rx="5" fill="#7d878a"/>
@@ -532,7 +589,7 @@ function render(d){
     $('thermoFill').style.transform = 'scaleY(.05)'; $('dropFill').style.transform = 'scaleY(0)';
     for (const e of ['thermoFill', 'thermoBulb']) $(e).style.fill = '#cfd8dc';
     helper('hFog', 'tFog', false); helper('hFan', 'tFan', false);
-    document.querySelectorAll('.puff,.wind').forEach(p => p.classList.remove('on'));
+    $('helperNebu').classList.remove('on'); document.querySelectorAll('.wind').forEach(p => p.classList.remove('on'));
     return;
   }
   const n = heartsOf(d); $('hearts').textContent = '❤️'.repeat(n) + '🤍'.repeat(5-n);
@@ -546,7 +603,7 @@ function render(d){
   $('dropFill').style.transform = `scaleY(${clamp01(d.h/100).toFixed(3)})`;
   const fogOn = d.fog > 20, fanOn = d.fan > 20;
   helper('hFog', 'tFog', fogOn); helper('hFan', 'tFan', fanOn);
-  document.querySelectorAll('.puff').forEach(p => p.classList.toggle('on', fogOn));
+  $('helperNebu').classList.toggle('on', fogOn);
   document.querySelectorAll('.wind').forEach(p => p.classList.toggle('on', fanOn));
   $('dH').textContent = d.h.toFixed(1); $('dT').textContent = d.t.toFixed(1); $('dS').textContent = d.sp;
   $('dF').textContent = Math.round(d.fog); $('dV').textContent = Math.round(d.fan); $('dM').textContent = d.tmax;
