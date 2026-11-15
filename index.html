@@ -671,7 +671,7 @@ function renderSeg(){
   if (hace > 2) return set('', '🛡️', 'Guardián de red: apagado', 'Última señal hace ' + hace + ' min.', '');
   const n = seg.hoy + (seg.hoy === 1 ? ' alerta' : ' alertas') + ' hoy';
   if (seg.estado === 'alerta') set('bad', '⚠️', 'Alerta de seguridad en la red', n + '. Revisa la ventana del guardián en la laptop.', '⚠️');
-  else set('ok', '🛡️', 'Red segura', seg.hoy ? n + ', ninguna en los últimos 10 min.' : 'Sin alertas hoy.', '🛡️');
+  else set('ok', '🛡️', 'Red segura', seg.hoy ? n + ', ninguna en el último minuto.' : 'Sin alertas hoy.', '🛡️');
 }
 setInterval(renderSeg, 15000);
 
