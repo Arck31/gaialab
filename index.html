@@ -95,6 +95,10 @@
   button{font:inherit;font-size:15px;font-weight:700;border:3px solid var(--ink);background:#ffe45c;color:var(--ink);
          border-radius:14px;padding:5px 12px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2)}
   button:active{transform:translateY(2px);box-shadow:none}
+  .shield{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:10px 12px;margin:10px 0;border:2px solid #c9d2da;background:#f4f6f8}
+  .shield.ok{border-color:#4cc16b;background:#eefbf0}.shield.bad{border-color:#e0452e;background:#fff0ec}
+  .shield .sh-ico{font-size:30px;line-height:1}.shield b{display:block}.shield small{font-size:14px;color:#5b5040}
+  .shield ul{margin:4px 0 0;padding-left:18px;font-size:14px}
   canvas#hist{width:100%;height:150px;background:#fff;border-radius:10px;border:2px solid var(--line)}
   @media (prefers-reduced-motion:reduce){.logo .sunico,.fact .bee,.helper .ico{animation:none!important}}
   /* ---- girasol: caras y extras se funden entre si; el movimiento lo calcula el JS en cada cuadro ---- */
@@ -401,7 +405,9 @@
 </div>
 
 <details>
-  <summary>🔬 Modo profesor</summary>
+  <summary>🔬 Modo profesor <span id="shMini"></span></summary>
+  <div class="shield" id="shield"><span class="sh-ico" id="shIco">🛡️</span>
+    <div><b id="shTitle">Guardián de red: apagado</b><small id="shSub">Ejecuta seguridad\INICIAR_GUARDIAN.bat en la laptop.</small><ul id="shList"></ul></div></div>
   <div class="tgrid">
     <div><b id="dH">-</b>Humedad %</div><div><b id="dT">-</b>Temp °C</div><div><b id="dS">-</b>Meta %</div>
     <div><b id="dF">-</b>PWM nube</div><div><b id="dV">-</b>PWM ventilador</div><div><b id="dM">-</b>Temp máx °C</div>
@@ -640,10 +646,11 @@ function nubeConectar(){
   mq = mqtt.connect(`wss://${CFG.host}:${CFG.port || 8084}/mqtt`,
     {username:CFG.user, password:CFG.pass, reconnectPeriod:4000, connectTimeout:8000,
      clientId:'web_' + Math.random().toString(16).slice(2, 10)});
-  mq.on('connect', () => { mq.subscribe([TOP + 'datos', TOP + 'estado', TOP + 'ack']); badge('🟢 conectado', 'ok'); });
+  mq.on('connect', () => { mq.subscribe([TOP + 'datos', TOP + 'estado', TOP + 'ack', TOP + 'seguridad']); badge('🟢 conectado', 'ok'); });
   mq.on('message', (topic, payload) => {
     if (demo) return;
     const s = payload.toString();
+    if (topic.endsWith('/seguridad')){ try { seg = JSON.parse(s); renderSeg(); } catch(e){} return; }
     if (topic.endsWith('/ack')){
       msgProfe(s === 'ok' ? 'Orden aplicada ✔' : s === 'bloqueado' ? 'Demasiados intentos: espera 1 minuto' : 'PIN incorrecto', s !== 'ok'); return; }
     if (topic.endsWith('/estado')){ moduloOnline = (s === 'online'); if (!moduloOnline){ badge('🔴 módulo apagado', 'bad'); render(null); } return; }
@@ -651,6 +658,23 @@ function nubeConectar(){
   });
   mq.on('error', err => { if (/authori|bad user|credentials/i.test(err.message)){ mq.end(true); badge('🔴 sin permiso', 'bad'); } });
 }
+// ---- guardian de red (Suricata en la laptop): escudo del modo profesor ----
+let seg = null;
+function renderSeg(){
+  const set = (cls, ico, t, sub, mini) => { $('shield').className = 'shield ' + cls; $('shIco').textContent = ico;
+    $('shTitle').textContent = t; $('shSub').textContent = sub; $('shMini').textContent = mini; };
+  const lista = seg && seg.ultimas ? seg.ultimas : [];
+  $('shList').innerHTML = '';
+  if (!seg) return set('', '🛡️', 'Guardián de red: apagado', 'Ejecuta seguridad\\INICIAR_GUARDIAN.bat en la laptop.', '');
+  const hace = Math.round((Date.now()/1000 - seg.ts)/60);
+  for (const a of lista){ const li = document.createElement('li'); li.textContent = a.hora + ' · ' + a.msg; $('shList').appendChild(li); }
+  if (hace > 2) return set('', '🛡️', 'Guardián de red: apagado', 'Última señal hace ' + hace + ' min.', '');
+  const n = seg.hoy + (seg.hoy === 1 ? ' alerta' : ' alertas') + ' hoy';
+  if (seg.estado === 'alerta') set('bad', '⚠️', 'Alerta de seguridad en la red', n + '. Revisa la ventana del guardián en la laptop.', '⚠️');
+  else set('ok', '🛡️', 'Red segura', seg.hoy ? n + ', ninguna en los últimos 10 min.' : 'Sin alertas hoy.', '🛡️');
+}
+setInterval(renderSeg, 15000);
+
 if (CLOUD){
   nubeConectar();
   setInterval(() => { if (!demo && lastMsg && Date.now() - lastMsg > 10000 && moduloOnline){
