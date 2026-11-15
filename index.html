@@ -4,103 +4,193 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GaiaLab - Mi girasol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#3b2a14;--card:#fffdf6;--line:#f0dfa8;--ok:#2f9e44;--okbg:#e6f9e8}
+  :root{
+    --paper:#f1f9e6; --paper2:#fff2d2; --card:#fffdf7; --ink:#36260f; --ink2:#6b5434; --line:#efdcae;
+    --leaf:#3f9b43; --leafd:#24702b; --leafbg:#e3f6e1; --sun:#ffc93c; --sund:#e09d00;
+    --sky1:#7fcdfb; --sky2:#d9f2ff; --water:#2f86de; --waterbg:#e2f1ff; --warm:#f2652f; --warmbg:#ffeadf;
+    --soil:#7a4a2a; --soil2:#5e3820; --heart:#ff5b70; --cream:#fff3dc;
+    --sh:0 10px 24px -14px rgba(80,52,10,.45),0 2px 6px -2px rgba(80,52,10,.18);
+    --spring:cubic-bezier(.3,1.35,.5,1);
+    --display:"Baloo 2","Nunito",system-ui,sans-serif;
+  }
   *{box-sizing:border-box}
-  body{margin:0;min-height:100vh;color:var(--ink);font:18px/1.35 "Trebuchet MS","Comic Sans MS",system-ui,sans-serif;
-       background:linear-gradient(#8fd3ff 0,#cdeeff 380px,#e8f8ff 72%,#c4ecab 100%);overflow-x:hidden}
-  .wrap{max-width:1120px;margin:0 auto;padding:12px 14px 40px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
+  html{scrollbar-color:#9fd08f var(--paper);-webkit-tap-highlight-color:transparent}
+  body{margin:0;min-height:100vh;color:var(--ink);font:500 19px/1.45 "Nunito",system-ui,sans-serif;caret-color:var(--leaf);
+       background:linear-gradient(#e4f4ff 0,#eef8ea 360px,var(--paper) 100%) no-repeat,var(--paper);overflow-x:hidden}
+  ::selection{background:var(--sun);color:var(--ink)}
+  :focus-visible{outline:3px solid var(--water);outline-offset:3px;border-radius:10px}
+  .wrap{max-width:1180px;margin:0 auto;padding:14px 16px 48px}
+  h1,h2,h3{font-family:var(--display);line-height:1.05;margin:0;text-wrap:balance}
+
+  /* encabezado */
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
   .logo{display:flex;align-items:center;gap:10px}
-  .logo .sunico{font-size:46px;line-height:1;display:inline-block;animation:nod 3s ease-in-out infinite}
-  @keyframes nod{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
-  h1{margin:0;font-size:clamp(26px,4.6vw,38px);line-height:1;text-shadow:0 2px 0 #fff}
-  .sub{font-size:16px;font-weight:700;color:#3d7a1f}
-  .hdr-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
-  .badge{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;font-size:13px;background:#fff;border-radius:99px;padding:4px 12px;border:2px solid var(--line)}
-  .badge.ok{border-color:#4cc16b} .badge.bad{border-color:#e0452e}
-  .layout{display:grid;grid-template-columns:minmax(300px,1fr) minmax(300px,1fr);gap:16px;align-items:start;margin-top:12px}
-  @media(max-width:820px){.layout{grid-template-columns:1fr}}
-  .left,.panel{display:grid;gap:14px}
-  .stage{position:relative;background:linear-gradient(#a8dcff,#e8f7ff);border:4px solid #fff;border-radius:28px;
-         box-shadow:0 6px 0 rgba(0,0,0,.12);overflow:hidden}
-  .sun{position:absolute;right:16px;top:12px;width:70px;height:70px;border-radius:50%;background:#ffe45c;
-       box-shadow:0 0 0 8px #fff2a0aa,0 0 40px 14px #ffe45c88;animation:pulse 3s ease-in-out infinite}
-  .cloud{position:absolute;top:30px;left:-120px;width:110px;height:36px;background:#fff;border-radius:40px;opacity:.9;animation:drift 38s linear infinite}
-  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
-  .cloud::before{width:44px;height:44px;left:16px;top:-22px}.cloud::after{width:32px;height:32px;left:56px;top:-14px}
-  .cloud.c2{top:90px;animation-duration:55s;animation-delay:-20s;transform:scale(.7)}
-  @keyframes drift{to{transform:translateX(1300px)}}
-  @keyframes pulse{50%{transform:scale(1.06)}}
-  svg#scene{display:block;width:100%;height:auto;position:relative}
-  .bubble{position:absolute;left:14px;top:14px;max-width:58%;background:#fff;border:3px solid var(--ink);border-radius:20px;
-          padding:8px 14px;font-weight:700;font-size:clamp(16px,2.6vw,22px);box-shadow:0 4px 0 rgba(0,0,0,.15)}
-  .bubble small{display:block;font-weight:400;font-size:.72em;margin-top:2px}
-  .card{background:var(--card);border:3px solid var(--line);border-radius:24px;padding:14px 16px;box-shadow:0 5px 0 rgba(0,0,0,.08)}
-  .card h2{margin:0;font-size:22px;display:flex;align-items:center;gap:8px}
-  .card h2 .ico{font-size:28px}
-  .cap{font-size:14px;color:#7a6a50;margin-top:-2px}
-  /* salud */
-  .health{display:flex;align-items:center;justify-content:space-between;gap:8px 12px;flex-wrap:wrap;border-color:#ffc6d3}
-  .health .hearts{font-size:30px;letter-spacing:2px;white-space:nowrap}
-  .status{font-weight:800;font-size:18px;padding:6px 14px;border-radius:99px;transition:background .4s,color .4s}
-  .status.good{background:var(--okbg);color:#1f7a32}.status.help{background:#fff0de;color:#b4501a}.status.wait{background:#eef2f6;color:#5b6b7a}
-  /* medidores: termometro y gota que se llenan + semaforo de tres caritas */
-  .gauges{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .gauge{text-align:center;padding:14px 10px}
-  .gauge h2{justify-content:center}
-  .gauge.temp{border-color:#ffc9b0}.gauge.water{border-color:#b9ddff}
-  .g-body{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0 10px}
-  .g-body svg{height:92px;width:auto;flex:none}
-  .g-val{font-size:clamp(30px,8vw,42px);font-weight:800;font-variant-numeric:tabular-nums;min-width:3ch}
-  .fill{transform-box:fill-box;transform-origin:50% 100%;transition:transform .9s cubic-bezier(.3,1.3,.5,1),fill .6s}
-  .steps{display:flex;gap:4px;justify-content:center}
-  .steps span{flex:1;display:flex;flex-direction:column;align-items:center;font-size:24px;padding:4px 0;border-radius:14px;
-              border:2px solid transparent;opacity:.35;filter:grayscale(.7);transition:all .4s}
-  .steps span b{font-size:12px}
-  .steps span.on{opacity:1;filter:none;border-color:currentColor;background:#fff;transform:scale(1.08)}
-  .steps .c{color:#2b7de9}.steps .k{color:#1f9a3a}.steps .h{color:#e0452e}.steps .d{color:#c27a1a}
-  /* ayudantes */
-  .helpers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-  .helper{text-align:center;border-radius:18px;padding:10px 8px;background:#fff;border:3px solid #e8e8e8;transition:all .3s}
-  .helper .ico{font-size:46px;display:inline-block;line-height:1.1}
-  .helper b{display:block;font-size:19px}
-  .helper .what{display:block;font-size:13px;color:#6b5a40}
-  .helper .pill{display:inline-block;margin-top:6px;font-size:14px;font-weight:800;padding:3px 10px;border-radius:99px;background:#eef2f6;color:#5b6b7a}
-  .helper.on{border-color:#4cc16b;background:var(--okbg)}
-  .helper.on .pill{background:var(--ok);color:#fff}
-  .helper.on.fog .ico{animation:bob .8s ease-in-out infinite}
-  .helper.on.fan .ico{animation:spin 1s linear infinite}
-  @keyframes bob{50%{transform:translateY(-8px)}}@keyframes spin{to{transform:rotate(360deg)}}
-  /* dato curioso */
-  .fact{display:flex;gap:12px;align-items:center;border-color:#ffe08a}
-  .fact .bee{font-size:44px;flex:none;animation:bob 2.4s ease-in-out infinite}
-  .fact p{margin:2px 0 6px;font-size:17px}
-  .fact button{font-size:14px;padding:3px 12px}
-  /* demo: "¿que pasa si...?" */
-  #demo{display:none;margin-top:12px;padding:10px 12px;background:#ffffffcc;border:3px dashed #ffc94d;border-radius:20px}
-  #demo.show{display:block}
-  #demo .t{font-weight:800;margin-bottom:8px}
+  .logo svg{width:58px;height:58px;flex:none;animation:nod 3.2s ease-in-out infinite;transform-origin:50% 90%}
+  @keyframes nod{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+  h1{font-size:clamp(32px,5.4vw,46px);font-weight:800;letter-spacing:-.01em}
+  h1 span{color:var(--leafd)}
+  .sub{font-weight:800;font-size:17px;color:var(--leafd);margin-top:2px}
+  .hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto}
+  .badge{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;font-weight:800;font-size:15px;background:var(--card);
+         border-radius:99px;padding:6px 14px 6px 10px;border:2px solid var(--line);box-shadow:var(--sh)}
+  .badge i{width:12px;height:12px;border-radius:50%;background:#b9b2a3;flex:none}
+  .badge.ok i{background:#3fbf55;box-shadow:0 0 0 4px #3fbf5533}.badge.bad i{background:#e8432c;box-shadow:0 0 0 4px #e8432c33}
+  .badge.wait i{background:var(--sun);animation:blinkdot 1s ease-in-out infinite}.badge.demo i{background:#9b6cf0}
+  @keyframes blinkdot{50%{opacity:.3}}
+
+  /* botones */
+  button{font:800 16px/1 "Nunito",system-ui,sans-serif;border:2.5px solid var(--ink);background:var(--sun);color:var(--ink);
+         border-radius:16px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 8px -3px rgba(80,52,10,.4);
+         display:inline-flex;align-items:center;gap:7px;transition:transform .15s,box-shadow .15s,background .2s}
+  button:hover{background:#ffd862;transform:translateY(-1px);box-shadow:0 7px 12px -4px rgba(80,52,10,.45)}
+  button:active{transform:translateY(2px);box-shadow:0 1px 2px rgba(80,52,10,.3)}
+  button svg{width:20px;height:20px;flex:none}
+  button.soft{background:var(--card);border-color:var(--line)}
+  button.soft:hover{background:#fff}
+
+  /* "¿que pasa si...?" (modo demo) */
+  #demo{display:none;margin-top:14px;padding:12px 14px;background:#f3ecff;border:2.5px solid #cdb8f6;border-radius:24px}
+  #demo.show{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+  #demo .t{font-family:var(--display);font-weight:800;font-size:22px;color:#4b2d91}
   #demo .row{display:flex;gap:8px;flex-wrap:wrap}
-  #demo button{font-size:16px;padding:6px 12px}
-  #demo button.sel{background:#8fe08b}
+  #demo button{background:var(--card);border-color:#cdb8f6;font-size:15px;padding:8px 13px}
+  #demo button::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--c)}
+  #demo button.sel{background:var(--c);border-color:var(--ink);color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35)}
+  #demo button.sel::before{background:#fff}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr);gap:22px;align-items:start;margin-top:16px}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}}
+
+  /* escenario del girasol: cielo, lomas y tierra con la salud */
+  .stage-wrap{border-radius:34px;overflow:hidden;box-shadow:var(--sh);border:3px solid #fff}
+  .stage{position:relative;background:linear-gradient(var(--sky1),var(--sky2) 70%)}
+  .hills{position:absolute;left:0;right:0;bottom:0;width:100%;height:36%;display:block}
+  .sun{position:absolute;right:20px;top:16px;width:78px;height:78px;border-radius:50%;background:#ffe24f;
+       box-shadow:0 0 0 10px #fff3a066,0 6px 40px 10px #ffd84a77;animation:pulse 3.4s ease-in-out infinite}
+  .cloud{position:absolute;top:34px;left:-130px;width:120px;height:38px;background:#fff;border-radius:40px;opacity:.95;animation:drift 40s linear infinite}
+  .cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .cloud::before{width:48px;height:48px;left:16px;top:-24px}.cloud::after{width:34px;height:34px;left:60px;top:-15px}
+  .cloud.c2{top:104px;animation-duration:58s;animation-delay:-22s;transform:scale(.7)}
+  @keyframes drift{to{transform:translateX(1400px)}}
+  @keyframes pulse{50%{transform:scale(1.06)}}
+  svg#scene{display:block;width:100%;height:auto;max-height:620px;position:relative}
+  .bubble{position:absolute;left:16px;top:16px;max-width:56%;background:#fff;border:3px solid var(--ink);border-radius:24px;
+          padding:10px 16px 11px;font:800 clamp(19px,2.6vw,25px)/1.12 var(--display);box-shadow:var(--sh)}
+  .bubble::after{content:"";position:absolute;right:30px;bottom:-11px;width:18px;height:18px;background:#fff;
+          border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);transform:rotate(45deg);border-bottom-right-radius:4px}
+  .bubble small{display:block;font:700 .66em/1.3 "Nunito",system-ui,sans-serif;margin-top:4px;color:var(--ink2)}
+  .ground{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap;padding:14px 18px 16px;
+          color:var(--cream);background:var(--soil);
+          background-image:radial-gradient(#ffffff14 2px,transparent 2.5px),radial-gradient(#00000022 2px,transparent 2.5px);
+          background-size:26px 22px,34px 30px;background-position:0 0,13px 9px;border-top:5px solid #4fae4f}
+  .ground h2{font-size:24px;font-weight:800;display:flex;align-items:center;gap:10px}
+  .hearts{display:flex;gap:4px}
+  .hrt{width:34px;height:34px;transition:transform .5s var(--spring)}
+  .hrt{fill:#ffffff1f;stroke:#f3d9bd;stroke-width:3;stroke-linejoin:round;transition:fill .4s,transform .5s var(--spring)}
+  .hrt.on{fill:var(--heart);stroke:#3a2210}
+  .hrt.on{transform:scale(1.08)}
+  .status{font:800 17px/1 "Nunito",system-ui,sans-serif;padding:9px 16px;border-radius:99px;transition:background .4s,color .4s}
+  .status.good{background:#dff7e0;color:#1b6e2c}.status.help{background:#ffe6d2;color:#9c3d10}.status.wait{background:#f0ebe2;color:#5b4c38}
+
+  /* panel derecho */
+  .panel{display:grid;gap:16px}
+  .panel>h2{font-size:clamp(28px,3.6vw,36px);font-weight:800;letter-spacing:-.01em;padding-top:4px}
+  .panel>h2 span{color:var(--leafd)}
+  .box{background:var(--card);border:2.5px solid var(--line);border-radius:28px;padding:16px 18px;box-shadow:var(--sh)}
+  .box h3{font-size:25px;font-weight:800}
+  .cap{font-size:15px;font-weight:700;color:var(--ink2)}
+
+  /* necesidades: termometro y gota que se llenan + camino de colores con una flecha */
+  .need{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:center}
+  .need.temp{background:#fff7f1;border-color:#ffd2bd}.need.water{background:#f3f9ff;border-color:#bcdcfa}
+  .need-art svg{height:104px;width:auto;display:block}
+  .need-top{display:flex;align-items:baseline;gap:4px 12px;flex-wrap:wrap}
+  .need-top .cap{flex:1}
+  .g-val{font:800 clamp(38px,6vw,50px)/1 var(--display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .need.temp .g-val{color:#b8431a}.need.water .g-val{color:#1d5fa6}
+  .fill{transform-box:fill-box;transform-origin:50% 100%;transition:transform .9s var(--spring),fill .6s}
+  .meter{position:relative;margin-top:22px}
+  .bar{display:flex;gap:4px}
+  .seg{flex:0 0 33%;min-width:0;display:flex;flex-direction:column;align-items:center;transition:flex-basis .8s var(--spring)}
+  .seg::before{content:"";align-self:stretch;height:18px;background:var(--zc);border-radius:6px;transition:opacity .4s}
+  .seg:first-child::before{border-radius:99px 6px 6px 99px}.seg:last-child::before{border-radius:6px 99px 99px 6px}
+  .seg .lab{font-weight:800;font-size:15px;color:var(--ink2);margin-top:5px;white-space:nowrap;transition:color .3s,transform .4s var(--spring)}
+  .seg.on .lab{color:var(--zt);transform:scale(1.12)}
+  .seg.cold{--zc:#76bdfc;--zt:#1d5fa6}.seg.ok{--zc:#62c86a;--zt:#1b6e2c}.seg.hot{--zc:#ff9b6b;--zt:#a8380f}
+  .seg.dry{--zc:#f0c066;--zt:#7d5000}.seg.wet{--zc:#76bdfc;--zt:#1d5fa6}
+  .pin{position:absolute;top:-21px;left:50%;width:26px;height:30px;transform:translateX(-50%);
+       transition:left .9s var(--spring),opacity .3s;filter:drop-shadow(0 3px 3px rgba(60,40,10,.35))}
+  .pin svg{width:100%;height:100%;display:block}
+  .meter.off .pin{opacity:0}
+  .meter.off .seg::before{opacity:.35}
+
+  /* ayudantes */
+  .team h3{font-size:25px;font-weight:800}
+  .helpers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+  .helper{text-align:center;border-radius:22px;padding:12px 8px 14px;background:var(--card);border:2.5px solid var(--line);box-shadow:var(--sh);transition:background .3s,border-color .3s}
+  .helper svg{width:74px;height:74px;display:block;margin:0 auto 4px;overflow:visible}
+  .helper b{display:block;font:800 22px/1.1 var(--display)}
+  .helper .what{display:block;font-size:15px;font-weight:700;color:var(--ink2)}
+  .helper .pill{display:inline-block;margin-top:8px;font-size:15px;font-weight:800;padding:5px 12px;border-radius:99px;background:#f0ebe2;color:#5b4c38}
+  .helper.on{border-color:#59bd5d;background:var(--leafbg)}
+  .helper.on .pill{background:var(--leafd);color:#fff}
+  .wheel{transform-box:view-box;transform-origin:32px 28px}
+  .helper.on .wheel{animation:spin .9s linear infinite}
+  .puff{opacity:0;transform-box:fill-box;transform-origin:center}
+  .helper.on .puff{animation:puff 1.8s ease-out infinite}
+  .helper.on .puff.p2{animation-delay:.6s}.helper.on .puff.p3{animation-delay:1.2s}
+  .helper.on .nb{animation:hum .22s linear infinite}
+  @keyframes puff{0%{transform:translateY(8px) scale(.4);opacity:0}25%{opacity:1}100%{transform:translateY(-14px) scale(1.25);opacity:0}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes bob{50%{transform:translateY(-7px)}}
+
+  /* dato curioso */
+  .fact{display:flex;gap:14px;align-items:center;background:#fffbe6;border-color:#f6dd84}
+  .fact>svg{width:70px;height:70px;flex:none;animation:bob 2.6s ease-in-out infinite}
+  .fact h3{font-size:23px}
+  .fact p{margin:4px 0 10px;font-size:18px;font-weight:700;max-width:46ch}
+
   /* modo profesor */
-  details{margin-top:16px;background:var(--card);border:3px solid var(--line);border-radius:18px;padding:8px 14px}
-  summary{cursor:pointer;font-weight:700}
-  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-  .tgrid div{background:#fff;border:2px solid var(--line);border-radius:10px;padding:4px 8px;font-size:14px}
-  .tgrid b{display:block;font-size:20px}
-  details label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0;font-size:15px}
-  details input[type=number]{width:80px;font:inherit;padding:2px 6px;border-radius:8px;border:2px solid var(--line)}
-  button{font:inherit;font-size:15px;font-weight:700;border:3px solid var(--ink);background:#ffe45c;color:var(--ink);
-         border-radius:14px;padding:5px 12px;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2)}
-  button:active{transform:translateY(2px);box-shadow:none}
-  .shield{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:10px 12px;margin:10px 0;border:2px solid #c9d2da;background:#f4f6f8}
-  .shield.ok{border-color:#4cc16b;background:#eefbf0}.shield.bad{border-color:#e0452e;background:#fff0ec}
-  .shield .sh-ico{font-size:30px;line-height:1}.shield b{display:block}.shield small{font-size:14px;color:#5b5040}
-  .shield ul{margin:4px 0 0;padding-left:18px;font-size:14px}
-  canvas#hist{width:100%;height:150px;background:#fff;border-radius:10px;border:2px solid var(--line)}
-  @media (prefers-reduced-motion:reduce){.logo .sunico,.fact .bee,.helper .ico{animation:none!important}}
+  details{margin-top:22px;background:var(--card);border:2.5px solid var(--line);border-radius:24px;padding:0 18px;box-shadow:var(--sh)}
+  summary{cursor:pointer;font:800 20px/1 var(--display);padding:16px 0;display:flex;align-items:center;gap:10px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary svg{width:26px;height:26px}
+  summary::after{content:"";margin-left:auto;width:11px;height:11px;border-right:3px solid var(--ink2);border-bottom:3px solid var(--ink2);
+                 transform:rotate(45deg) translateY(-3px);transition:transform .3s}
+  details[open] summary::after{transform:rotate(225deg) translate(-2px,-2px)}
+  details[open]{padding-bottom:16px}
+  .mini{width:12px;height:12px;border-radius:50%;display:none}
+  .mini.ok{display:inline-block;background:#3fbf55}.mini.bad{display:inline-block;background:#e8432c;animation:blinkdot 1s ease-in-out infinite}
+  .tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+  @media(max-width:520px){.tgrid{grid-template-columns:repeat(2,1fr)}}
+  .tgrid div{background:#f6f1e4;border-radius:14px;padding:6px 10px;font-size:14px;font-weight:700;color:var(--ink2)}
+  .tgrid b{display:block;font:800 24px/1.1 var(--display);color:var(--ink);font-variant-numeric:tabular-nums}
+  details label{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0;font-size:16px;font-weight:700}
+  details input{font:inherit;padding:6px 10px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink);accent-color:var(--leaf)}
+  details input[type=number]{width:90px;font-variant-numeric:tabular-nums}
+  details input:focus{border-color:var(--water)}
+  .shield{display:flex;gap:12px;align-items:flex-start;border-radius:18px;padding:12px 14px;margin:4px 0 10px;background:#f6f3ec}
+  .shield.ok{background:#e6f7e6}.shield.bad{background:#ffe9e3}
+  .shield svg{width:40px;height:44px;flex:none}
+  .shield .sp{fill:#c9c1b2}.shield.ok .sp{fill:#3fbf55}.shield.bad .sp{fill:#e8432c}
+  .shield .ck,.shield .bg{display:none}.shield.ok .ck{display:inline}.shield.bad .bg{display:inline}
+  .shield b{display:block;font:800 19px/1.2 var(--display)}.shield small{font-size:15px;color:var(--ink2);font-weight:700}
+  .shield ul{margin:4px 0 0;padding-left:18px;font-size:15px}
+  canvas#hist{width:100%;height:150px;background:#fff;border-radius:14px;border:2px solid var(--line)}
+  #profeMsg{font-size:15px;font-weight:800;min-height:22px}
+
+  @media(max-width:520px){
+    .need{grid-template-columns:1fr;text-align:left}
+    .need-art{display:none}
+    .bubble{max-width:64%}
+    .hrt{width:30px;height:30px}
+  }
+  @media (prefers-reduced-motion:reduce){.logo svg,.fact svg,.wheel,.puff,.nb,.badge i{animation:none!important}}
+
   /* ---- girasol: caras y extras se funden entre si; el movimiento lo calcula el JS en cada cuadro ---- */
   #scene{--petal:#e8dca0;--petal2:#d4c680;--disc:#7d6a50;touch-action:manipulation}
   .petal{fill:var(--petal);stroke:#8a5a00;stroke-width:2}
@@ -174,19 +264,49 @@
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-heart" viewBox="0 0 48 48"><path d="M24 41C11 32 5 25 5 17.5a9.5 9.5 0 0 1 19-4.6 9.5 9.5 0 0 1 19 4.6C43 25 37 32 24 41Z"/></symbol>
+</svg>
 <div class="wrap">
   <header>
-    <div class="logo"><span class="sunico">🌻</span><div><h1>GaiaLab</h1><div class="sub">¡Cuida a tu girasol!</div></div></div>
-    <div class="hdr-right"><button id="demoBtn" style="font-size:13px;padding:2px 10px">🎮 Demo</button><span id="conn" class="badge">conectando…</span></div>
+    <div class="logo">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 40 V62" stroke="#3f9b43" stroke-width="5" stroke-linecap="round"/>
+        <path d="M32 54 C24 54 19 50 18 45 C25 44 30 48 32 54Z" fill="#59c05a" stroke="#24702b" stroke-width="2"/>
+        <g fill="#ffc93c" stroke="#8a5a00" stroke-width="1.8">
+          <ellipse cx="32" cy="9" rx="6" ry="9"/><ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(45 32 26)"/>
+          <ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(90 32 26)"/><ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(135 32 26)"/>
+          <ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(180 32 26)"/><ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(225 32 26)"/>
+          <ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(270 32 26)"/><ellipse cx="32" cy="9" rx="6" ry="9" transform="rotate(315 32 26)"/>
+        </g>
+        <circle cx="32" cy="26" r="11" fill="#9a6226" stroke="#5a3a12" stroke-width="2"/>
+        <circle cx="28" cy="24" r="1.8" fill="#2b1a08"/><circle cx="36" cy="24" r="1.8" fill="#2b1a08"/>
+        <path d="M27.5 29 Q32 33 36.5 29" fill="none" stroke="#2b1a08" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div><h1>Gaia<span>Lab</span></h1><div class="sub">¡Cuida a tu girasol!</div></div>
+    </div>
+    <div class="hdr-right">
+      <button id="demoBtn" class="soft"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#9b6cf0" stroke="#36260f" stroke-width="2"/><path d="M10 8 L16 12 L10 16Z" fill="#fff"/></svg>Demo</button>
+      <span id="conn" class="badge wait"><i></i><span>conectando…</span></span>
+    </div>
   </header>
 
-  <div id="demo"><div class="t">🎮 ¿Qué pasa si…?</div><div class="row" id="demoRow"></div></div>
+  <div id="demo"><div class="t">¿Qué pasa si…?</div><div class="row" id="demoRow"></div></div>
 
   <div class="layout">
   <div class="left">
-    <div class="stage">
-      <div class="sun"></div><div class="cloud"></div><div class="cloud c2"></div>
-      <svg id="scene" viewBox="0 0 400 480" data-mood="sleep" role="img" aria-label="Girasol">
+    <div class="stage-wrap">
+      <div class="stage">
+        <svg class="hills" viewBox="0 0 400 160" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 70 C70 30 140 40 210 72 C270 98 330 50 400 58 V160 H0Z" fill="#a6de86"/>
+          <path d="M0 112 C80 80 160 92 230 110 C300 128 350 96 400 100 V160 H0Z" fill="#74c562"/>
+          <g fill="#4fae4f"><path d="M40 112 l4 -12 l3 12Z"/><path d="M48 113 l3 -9 l3 9Z"/><path d="M330 102 l4 -12 l3 12Z"/><path d="M338 103 l3 -9 l3 9Z"/></g>
+          <g><circle cx="300" cy="66" r="4" fill="#fff"/><circle cx="300" cy="66" r="1.6" fill="#ffc93c"/>
+             <circle cx="92" cy="58" r="4" fill="#ff9fb1"/><circle cx="92" cy="58" r="1.6" fill="#fff"/>
+             <circle cx="365" cy="112" r="4" fill="#fff"/><circle cx="365" cy="112" r="1.6" fill="#ffc93c"/></g>
+        </svg>
+        <div class="sun"></div><div class="cloud"></div><div class="cloud c2"></div>
+      <svg id="scene" viewBox="0 0 400 480" data-mood="sleep" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Girasol">
         <!-- ayudantes -->
         <g id="helperNebu">
           <!-- rocio: sube desde la boquilla hacia la planta (solo cuando esta encendido) -->
@@ -347,66 +467,123 @@
         </g>
         <g id="fx"></g>
       </svg>
-      <div class="bubble" id="bubble">Despertando…<small>Esperando datos del sensor</small></div>
-    </div>
-    <div class="card health">
-      <h2><span class="ico">💖</span>Salud</h2>
-      <div class="hearts" id="hearts">🤍🤍🤍🤍🤍</div>
-      <div class="status wait" id="status">Esperando al sensor…</div>
+        <div class="bubble" id="bubble">Despertando…<small>Esperando datos del sensor</small></div>
+      </div>
+      <div class="ground">
+        <h2>Salud <span class="hearts" id="hearts" role="img" aria-label="Salud: 0 de 5">
+          <svg class="hrt"><use href="#i-heart"/></svg><svg class="hrt"><use href="#i-heart"/></svg><svg class="hrt"><use href="#i-heart"/></svg><svg class="hrt"><use href="#i-heart"/></svg><svg class="hrt"><use href="#i-heart"/></svg>
+        </span></h2>
+        <div class="status wait" id="status">Esperando al sensor…</div>
+      </div>
     </div>
   </div>
 
   <div class="panel">
-    <div class="gauges">
-      <div class="card gauge temp">
-        <h2><span class="ico">🌡️</span>Calor</h2>
-        <div class="cap">temperatura</div>
-        <div class="g-body">
-          <svg viewBox="0 0 40 100" aria-hidden="true">
-            <rect x="12" y="4" width="16" height="74" rx="8" fill="#fff" stroke="#3b2a14" stroke-width="3"/>
-            <rect id="thermoFill" class="fill" x="16.5" y="8" width="7" height="72" rx="3.5" fill="#cfd8dc" style="transform:scaleY(.05)"/>
-            <circle id="thermoBulb" class="fill" cx="20" cy="82" r="14" fill="#cfd8dc" stroke="#3b2a14" stroke-width="3"/>
-            <rect x="15" y="12" width="3" height="40" rx="1.5" fill="#fff" opacity=".7"/>
-          </svg>
-          <div class="g-val" id="vT">--</div>
-        </div>
-        <div class="steps" id="stT"><span class="c" data-s="cold">🥶<b>Frío</b></span><span class="k" data-s="ok">😊<b>Bien</b></span><span class="h" data-s="hot">🥵<b>Calor</b></span></div>
-      </div>
-      <div class="card gauge water">
-        <h2><span class="ico">💧</span>Agua</h2>
-        <div class="cap">en el aire</div>
-        <div class="g-body">
-          <svg viewBox="0 0 60 86" aria-hidden="true">
-            <defs><clipPath id="dropClip"><path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z"/></clipPath></defs>
-            <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="#fff"/>
-            <g clip-path="url(#dropClip)"><rect id="dropFill" class="fill" x="0" y="0" width="60" height="86" fill="#4fb3ff" style="transform:scaleY(0)"/></g>
-            <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="none" stroke="#3b2a14" stroke-width="3"/>
-            <ellipse cx="19" cy="50" rx="4" ry="9" fill="#fff" opacity=".6"/>
-          </svg>
-          <div class="g-val" id="vH">--</div>
-        </div>
-        <div class="steps" id="stH"><span class="d" data-s="dry">🏜️<b>Seco</b></span><span class="k" data-s="ok">😊<b>Bien</b></span><span class="c" data-s="wet">🌧️<b>Mojado</b></span></div>
-      </div>
-    </div>
+    <h2>¿Qué necesita mi <span>girasol</span>?</h2>
 
-    <div class="card">
-      <h2><span class="ico">🤝</span>Mis ayudantes</h2>
+    <section class="box need temp">
+      <div class="need-art">
+        <svg viewBox="0 0 40 100" aria-hidden="true">
+          <rect x="12" y="4" width="16" height="74" rx="8" fill="#fff" stroke="#36260f" stroke-width="3"/>
+          <rect id="thermoFill" class="fill" x="16.5" y="8" width="7" height="72" rx="3.5" fill="#cfd8dc" style="transform:scaleY(.05)"/>
+          <circle id="thermoBulb" class="fill" cx="20" cy="82" r="14" fill="#cfd8dc" stroke="#36260f" stroke-width="3"/>
+          <rect x="15" y="12" width="3" height="40" rx="1.5" fill="#fff" opacity=".7"/>
+        </svg>
+      </div>
+      <div class="need-main">
+        <div class="need-top"><h3>Calor</h3><span class="cap">temperatura</span><b class="g-val" id="vT">--</b></div>
+        <div class="meter off" id="stT">
+          <div class="bar">
+            <span class="seg cold" data-s="cold" style="flex-basis:26.7%"><span class="lab">Frío</span></span>
+            <span class="seg ok" data-s="ok" style="flex-basis:28.3%"><span class="lab">Bien</span></span>
+            <span class="seg hot" data-s="hot" style="flex-basis:45%"><span class="lab">Calor</span></span>
+          </div>
+          <span class="pin"><svg viewBox="0 0 26 30" aria-hidden="true"><path d="M13 29 L4 15 A10 10 0 1 1 22 15Z" fill="#36260f"/><circle cx="13" cy="11" r="5" fill="#ffc93c"/></svg></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="box need water">
+      <div class="need-art">
+        <svg viewBox="0 0 60 86" aria-hidden="true">
+          <defs><clipPath id="dropClip"><path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z"/></clipPath></defs>
+          <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="#fff"/>
+          <g clip-path="url(#dropClip)"><rect id="dropFill" class="fill" x="0" y="0" width="60" height="86" fill="#4fb3ff" style="transform:scaleY(0)"/></g>
+          <path d="M30 4 C22 18 6 36 6 56 a24 24 0 0 0 48 0 C54 36 38 18 30 4Z" fill="none" stroke="#36260f" stroke-width="3"/>
+          <ellipse cx="19" cy="50" rx="4" ry="9" fill="#fff" opacity=".6"/>
+        </svg>
+      </div>
+      <div class="need-main">
+        <div class="need-top"><h3>Agua</h3><span class="cap">en el aire</span><b class="g-val" id="vH">--</b></div>
+        <div class="meter off" id="stH">
+          <div class="bar">
+            <span class="seg dry" data-s="dry" style="flex-basis:58.3%"><span class="lab">Seco</span></span>
+            <span class="seg ok" data-s="ok" style="flex-basis:16.7%"><span class="lab">Bien</span></span>
+            <span class="seg wet" data-s="wet" style="flex-basis:25%"><span class="lab">Mojado</span></span>
+          </div>
+          <span class="pin"><svg viewBox="0 0 26 30" aria-hidden="true"><path d="M13 29 L4 15 A10 10 0 1 1 22 15Z" fill="#36260f"/><circle cx="13" cy="11" r="5" fill="#ffc93c"/></svg></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="team">
+      <h3>Mis ayudantes</h3>
       <div class="helpers">
-        <div class="helper fog" id="hFog"><span class="ico">☁️</span><b>Nube</b><span class="what">Echa agüita al aire</span><span class="pill" id="tFog">Descansando 💤</span></div>
-        <div class="helper fan" id="hFan"><span class="ico">🌀</span><b>Molinillo</b><span class="what">Trae aire fresquito</span><span class="pill" id="tFan">Descansando 💤</span></div>
+        <div class="helper fog" id="hFog">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <circle class="puff" cx="32" cy="14" r="7" fill="#e3f4ff" stroke="#5fb0ea" stroke-width="2.5"/>
+            <circle class="puff p2" cx="22" cy="12" r="5.5" fill="#e3f4ff" stroke="#5fb0ea" stroke-width="2.5"/>
+            <circle class="puff p3" cx="42" cy="12" r="5.5" fill="#e3f4ff" stroke="#5fb0ea" stroke-width="2.5"/>
+            <g class="nb">
+              <rect x="26" y="24" width="12" height="9" rx="3" fill="#5fc3d8" stroke="#36260f" stroke-width="2.5"/>
+              <rect x="10" y="31" width="44" height="28" rx="10" fill="#7fd6e8" stroke="#36260f" stroke-width="2.5"/>
+              <circle cx="26" cy="43" r="2.6" fill="#36260f"/><circle cx="38" cy="43" r="2.6" fill="#36260f"/>
+              <path d="M27 50 Q32 54 37 50" fill="none" stroke="#36260f" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+          </svg>
+          <b>Nube</b><span class="what">Echa agüita al aire</span><span class="pill" id="tFog">Descansando</span>
+        </div>
+        <div class="helper fan" id="hFan">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M32 30 V62" stroke="#a5793f" stroke-width="5" stroke-linecap="round"/>
+            <g class="wheel" stroke="#36260f" stroke-width="2.3" stroke-linejoin="round">
+              <path d="M32 28 L32 4 Q46 10 32 28Z" fill="#ffc93c"/>
+              <path d="M32 28 L56 28 Q50 42 32 28Z" fill="#ff7b8a"/>
+              <path d="M32 28 L32 52 Q18 46 32 28Z" fill="#62c86a"/>
+              <path d="M32 28 L8 28 Q14 14 32 28Z" fill="#76bdfc"/>
+            </g>
+            <circle cx="32" cy="28" r="3.6" fill="#fff" stroke="#36260f" stroke-width="2.3"/>
+          </svg>
+          <b>Molinillo</b><span class="what">Trae aire fresquito</span><span class="pill" id="tFan">Descansando</span>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="card fact">
-      <span class="bee">🐝</span>
-      <div><b>¿Sabías que…?</b><p id="fact"></p><button id="nextFact">Otro dato ➜</button></div>
-    </div>
+    <section class="box fact">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <ellipse cx="24" cy="18" rx="10" ry="13" fill="#eaf7ff" stroke="#36260f" stroke-width="2.3" transform="rotate(-20 24 18)"/>
+        <ellipse cx="40" cy="18" rx="10" ry="13" fill="#eaf7ff" stroke="#36260f" stroke-width="2.3" transform="rotate(20 40 18)"/>
+        <ellipse cx="32" cy="38" rx="20" ry="15" fill="#ffc93c" stroke="#36260f" stroke-width="2.5"/>
+        <path d="M27 24.5 Q24 38 27 52 M37 24.5 Q40 38 37 52" fill="none" stroke="#36260f" stroke-width="4"/>
+        <path d="M51 38 L58 38" stroke="#36260f" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="18" cy="35" r="2.6" fill="#36260f"/><circle cx="18.8" cy="34" r=".9" fill="#fff"/>
+        <path d="M14 42 Q17 45 20 42" fill="none" stroke="#36260f" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 24 Q14 16 10 15 M22 23 Q21 15 18 12" fill="none" stroke="#36260f" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div><h3>¿Sabías que…?</h3><p id="fact"></p><button id="nextFact">Otro dato
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12 H18 M13 7 L18 12 L13 17" fill="none" stroke="#36260f" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    </section>
   </div>
 </div>
 
 <details>
-  <summary>🔬 Modo profesor <span id="shMini"></span></summary>
-  <div class="shield" id="shield"><span class="sh-ico" id="shIco">🛡️</span>
+  <summary><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5" fill="#e2f1ff" stroke="#36260f" stroke-width="2.4"/><path d="M15 15 L21 21" stroke="#36260f" stroke-width="3" stroke-linecap="round"/></svg>Modo profesor <span class="mini" id="shMini"></span></summary>
+  <div class="shield" id="shield">
+    <svg id="shIco" viewBox="0 0 48 52" aria-hidden="true">
+      <path class="sp" d="M24 3 L43 10 V24 C43 37 34 45 24 49 C14 45 5 37 5 24 V10Z" stroke="#36260f" stroke-width="2.5" stroke-linejoin="round"/>
+      <path class="ck" d="M15 26 L22 33 L34 19" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g class="bg" fill="#fff"><rect x="21.5" y="14" width="5" height="17" rx="2.5"/><circle cx="24" cy="37.5" r="3"/></g>
+    </svg>
     <div><b id="shTitle">Guardián de red: apagado</b><small id="shSub">Ejecuta seguridad\INICIAR_GUARDIAN.bat en la laptop.</small><ul id="shList"></ul></div></div>
   <div class="tgrid">
     <div><b id="dH">-</b>Humedad %</div><div><b id="dT">-</b>Temp °C</div><div><b id="dS">-</b>Meta %</div>
@@ -415,9 +592,9 @@
   <canvas id="hist" width="600" height="150"></canvas>
   <label>Meta de humedad <input id="inSP" type="number" min="40" max="95" step="1" value="80"> %
     Temp máx <input id="inTM" type="number" min="20" max="35" step="0.5" value="26"> °C</label>
-  <label>PIN del profesor <input id="inPass" type="password" autocomplete="off" style="width:130px">
+  <label>PIN del profesor <input id="inPass" type="password" autocomplete="off" style="width:140px">
     <button id="send">Enviar</button></label>
-  <div id="profeMsg" style="font-size:14px;min-height:20px"></div>
+  <div id="profeMsg"></div>
 </details>
 </div>
 
@@ -433,23 +610,23 @@ let demo = Q.has('demo') || (!/^https?:$/.test(location.protocol) && !Q.get('esp
 const CLOUD = !demo && !!CFG && !!window.mqtt && !Q.get('esp');                              // con config.js => nube
 const TOL_H = 5, T_MIN = 18;                                         // margen de humedad y temperatura minima comoda
 
-const STATUS = {happy:['¡Súper feliz! 🌟','good'], hot:['Necesita aire fresco','help'], thirsty:['Necesita agüita','help'],
+const STATUS = {happy:['¡Súper feliz!','good'], hot:['Necesita aire fresco','help'], thirsty:['Necesita agüita','help'],
                 wet:['Tiene mucha agua','help'], cold:['Necesita calorcito','help'], sleep:['Esperando al sensor…','wait']};
 const MOODS = {
-  happy:  ['¡Estoy feliz! 🌞', 'Tengo el agua y el calor justos.'],
-  hot:    ['¡Uf, tengo mucho calor! 🥵', 'El molinillo me está dando aire fresco.'],
-  thirsty:['¡Tengo sed! 💧', 'La nube me está dando agüita.'],
-  wet:    ['¡Hay demasiada agua! 🌧️', 'El molinillo saca el aire mojado.'],
-  cold:   ['¡Brrr, tengo frío! 🥶', 'Necesito un lugar más calentito.'],
-  sleep:  ['Zzz… estoy dormida 😴', 'No me llegan datos del sensor.']
+  happy:  ['¡Estoy feliz!', 'Tengo el agua y el calor justos.'],
+  hot:    ['¡Uf, tengo mucho calor!', 'El molinillo me está dando aire fresco.'],
+  thirsty:['¡Tengo sed!', 'La nube me está dando agüita.'],
+  wet:    ['¡Hay demasiada agua!', 'El molinillo saca el aire mojado.'],
+  cold:   ['¡Brrr, tengo frío!', 'Necesito un lugar más calentito.'],
+  sleep:  ['Zzz… estoy dormida', 'No me llegan datos del sensor.']
 };
 const FACTS = [
-  '🌱 Las plantas «sudan»: se llama transpiración y así se refrescan.',
-  '🌻 Los girasoles jóvenes siguen al Sol durante el día. ¡Se llama heliotropismo!',
-  '💧 Las plantas toman agua por las raíces y la suben hasta las hojas.',
-  '🌡️ Si hace mucho calor, las plantas cierran sus poros para no perder agua.',
-  '🍃 Las hojas fabrican su comida con luz, agua y aire. ¡Eso es la fotosíntesis!',
-  '🌍 Cuidar las plantas ayuda a cuidar el planeta. ¡Tú eres un científico!'
+  'Las plantas «sudan»: se llama transpiración y así se refrescan.',
+  'Los girasoles jóvenes siguen al Sol durante el día. ¡Se llama heliotropismo!',
+  'Las plantas toman agua por las raíces y la suben hasta las hojas.',
+  'Si hace mucho calor, las plantas cierran sus poros para no perder agua.',
+  'Las hojas fabrican su comida con luz, agua y aire. ¡Eso es la fotosíntesis!',
+  'Cuidar las plantas ayuda a cuidar el planeta. ¡Tú eres un científico!'
 ];
 let fi = 0, factTimer;
 function showFact(){ $('fact').textContent = FACTS[fi++ % FACTS.length]; clearInterval(factTimer); factTimer = setInterval(showFact, 15000); }
@@ -569,9 +746,10 @@ function burst(ch, n){
     t.addEventListener('animationend', () => t.remove()); $('fx').appendChild(t);
   }
 }
+
 // al tocar el girasol: brinca, reacciona segun su estado y dice algo
-const TICKLE = {happy:'¡Jiji, me haces cosquillas! 😆', hot:'¡Qué calor! ¿Me soplas? 🥵', thirsty:'¿Me das agüita, porfa? 💧',
-                wet:'¡Estoy empapada! 🌧️', cold:'¡Brrr! ¿Me das un abrazo? 🥶', sleep:'Mmm… cinco minutitos más 😴'};
+const TICKLE = {happy:'¡Jiji, me haces cosquillas!', hot:'¡Qué calor! ¿Me soplas?', thirsty:'¿Me das agüita, porfa?',
+                wet:'¡Estoy empapada!', cold:'¡Brrr! ¿Me das un abrazo?', sleep:'Mmm… cinco minutitos más'};
 const FXCH = {happy:'💛', hot:'💦', thirsty:'💧', wet:'💧', cold:'❄️', sleep:'💤'};
 let joyTimer, tickleTimer;
 $('headHit').addEventListener('pointerdown', () => {
@@ -585,26 +763,37 @@ $('headHit').addEventListener('pointerdown', () => {
 // ---- pintar datos ----
 const hist = {h:[], t:[]};
 const clamp01 = v => Math.max(0, Math.min(1, v));
-function setSteps(id, s){ $(id).querySelectorAll('span').forEach(e => e.classList.toggle('on', e.dataset.s === s)); }
-function helper(id, txtId, on){ $(id).classList.toggle('on', on); $(txtId).textContent = on ? '¡Trabajando! 💪' : 'Descansando 💤'; }
+function setHearts(n){ $('hearts').querySelectorAll('.hrt').forEach((e, i) => e.classList.toggle('on', i < n));
+  $('hearts').setAttribute('aria-label', `Salud: ${n} de 5`); }
+// camino de colores: el ancho de cada tramo sale de los limites reales; la flecha marca el valor
+function setMeter(id, val, lo, hi, cuts, s){
+  const m = $(id), segs = m.querySelectorAll('.seg');
+  if (val == null){ m.classList.add('off'); segs.forEach(e => e.classList.remove('on')); return; }
+  const p = v => clamp01((v - lo)/(hi - lo))*100, w = [p(cuts[0]), p(cuts[1]) - p(cuts[0]), 100 - p(cuts[1])];
+  m.classList.remove('off');
+  segs.forEach((e, i) => { e.style.flexBasis = `calc(${w[i].toFixed(1)}% - 3px)`; e.classList.toggle('on', e.dataset.s === s); });
+  m.querySelector('.pin').style.left = p(val).toFixed(1) + '%';
+}
+function helper(id, txtId, on){ $(id).classList.toggle('on', on); $(txtId).textContent = on ? '¡Trabajando!' : 'Descansando'; }
 function render(d){
   setMood(moodOf(d));
   if (!d){                                                     // sin datos: todo en reposo
-    $('hearts').textContent = '🤍🤍🤍🤍🤍'; $('vT').textContent = '--'; $('vH').textContent = '--';
-    setSteps('stT', ''); setSteps('stH', '');
+    setHearts(0); $('vT').textContent = '--'; $('vH').textContent = '--';
+    setMeter('stT', null); setMeter('stH', null);
     $('thermoFill').style.transform = 'scaleY(.05)'; $('dropFill').style.transform = 'scaleY(0)';
     for (const e of ['thermoFill', 'thermoBulb']) $(e).style.fill = '#cfd8dc';
     helper('hFog', 'tFog', false); helper('hFan', 'tFan', false);
     $('helperNebu').classList.remove('on'); document.querySelectorAll('.wind').forEach(p => p.classList.remove('on'));
     return;
   }
-  const n = heartsOf(d); $('hearts').textContent = '❤️'.repeat(n) + '🤍'.repeat(5-n);
+  setHearts(heartsOf(d));
   $('vT').textContent = d.t.toFixed(1) + '°'; $('vH').textContent = Math.round(d.h) + '%';
   const ts = d.t < T_MIN ? 'cold' : d.t > d.tmax + 0.5 ? 'hot' : 'ok';            // mismos limites que el animo del girasol
   const hs = d.h < d.sp - TOL_H ? 'dry' : d.h > d.sp + TOL_H ? 'wet' : 'ok';
-  setSteps('stT', ts); setSteps('stH', hs);
+  setMeter('stT', d.t, 10, 40, [T_MIN, d.tmax + 0.5], ts);                          // escala 10-40 °C
+  setMeter('stH', d.h, 40, 100, [d.sp - TOL_H, d.sp + TOL_H], hs);                  // escala 40-100 %
   const tc = {cold:'#4aa3ff', ok:'#3fb950', hot:'#ff6b3d'}[ts];
-  $('thermoFill').style.transform = `scaleY(${Math.max(.05, clamp01((d.t - 10)/30)).toFixed(3)})`;   // escala 10-40 °C
+  $('thermoFill').style.transform = `scaleY(${Math.max(.05, clamp01((d.t - 10)/30)).toFixed(3)})`;
   for (const e of ['thermoFill', 'thermoBulb']) $(e).style.fill = tc;
   $('dropFill').style.transform = `scaleY(${clamp01(d.h/100).toFixed(3)})`;
   const fogOn = d.fog > 20, fanOn = d.fan > 20;
@@ -623,7 +812,7 @@ function drawHist(d){
   g.setLineDash([6,5]); g.strokeStyle = '#999'; const ys = H-6-(d.sp-40)/60*(H-12);
   g.beginPath(); g.moveTo(0,ys); g.lineTo(W,ys); g.stroke(); g.setLineDash([]);
   line(hist.h, 40, 100, '#2b7de9'); line(hist.t, 10, 40, '#e0452e');
-  g.font = '12px sans-serif'; g.fillStyle = '#2b7de9'; g.fillText('humedad', 6, 14); g.fillStyle = '#e0452e'; g.fillText('temperatura', 66, 14);
+  g.font = '700 12px Nunito, sans-serif'; g.fillStyle = '#2b7de9'; g.fillText('humedad', 6, 14); g.fillStyle = '#e0452e'; g.fillText('temperatura', 66, 14);
 }
 
 // ---- ventilador animado ----
@@ -633,8 +822,8 @@ let ang = 0, fanSpeed = 0;
 
 // ---- conexion con el ESP32 ----
 let fails = 0, last = null;
-function badge(txt, cls){ const b = $('conn'); b.textContent = txt; b.className = 'badge ' + cls; }
-const msgProfe = (t, bad) => { $('profeMsg').textContent = t; $('profeMsg').style.color = bad ? '#c0392b' : '#2f7d4f'; };
+function badge(txt, cls){ const b = $('conn'); b.querySelector('span').textContent = txt; b.className = 'badge ' + cls; }
+const msgProfe = (t, bad) => { $('profeMsg').textContent = t; $('profeMsg').style.color = bad ? '#b3261e' : '#1b6e2c'; };
 function syncInputs(d){ if (!window._synced){ $('inSP').value = d.sp; $('inTM').value = d.tmax; window._synced = true; } }
 
 // ---- modo nube: MQTT sobre WebSocket seguro (wss) ----
@@ -642,59 +831,59 @@ function syncInputs(d){ if (!window._synced){ $('inSP').value = d.sp; $('inTM').
 let mq = null, lastMsg = 0, moduloOnline = true;
 const TOP = CFG ? `gaialab/${CFG.id}/` : '';
 function nubeConectar(){
-  badge('⏳ conectando…', '');
+  badge('conectando…', 'wait');
   mq = mqtt.connect(`wss://${CFG.host}:${CFG.port || 8084}/mqtt`,
     {username:CFG.user, password:CFG.pass, reconnectPeriod:4000, connectTimeout:8000,
      clientId:'web_' + Math.random().toString(16).slice(2, 10)});
-  mq.on('connect', () => { mq.subscribe([TOP + 'datos', TOP + 'estado', TOP + 'ack', TOP + 'seguridad']); badge('🟢 conectado', 'ok'); });
+  mq.on('connect', () => { mq.subscribe([TOP + 'datos', TOP + 'estado', TOP + 'ack', TOP + 'seguridad']); badge('conectado', 'ok'); });
   mq.on('message', (topic, payload) => {
     if (demo) return;
     const s = payload.toString();
     if (topic.endsWith('/seguridad')){ try { seg = JSON.parse(s); renderSeg(); } catch(e){} return; }
     if (topic.endsWith('/ack')){
       msgProfe(s === 'ok' ? 'Orden aplicada ✔' : s === 'bloqueado' ? 'Demasiados intentos: espera 1 minuto' : 'PIN incorrecto', s !== 'ok'); return; }
-    if (topic.endsWith('/estado')){ moduloOnline = (s === 'online'); if (!moduloOnline){ badge('🔴 módulo apagado', 'bad'); render(null); } return; }
-    try { last = JSON.parse(s); lastMsg = Date.now(); moduloOnline = true; render(last); syncInputs(last); badge('🟢 conectado', 'ok'); } catch(e){}
+    if (topic.endsWith('/estado')){ moduloOnline = (s === 'online'); if (!moduloOnline){ badge('módulo apagado', 'bad'); render(null); } return; }
+    try { last = JSON.parse(s); lastMsg = Date.now(); moduloOnline = true; render(last); syncInputs(last); badge('conectado', 'ok'); } catch(e){}
   });
-  mq.on('error', err => { if (/authori|bad user|credentials/i.test(err.message)){ mq.end(true); badge('🔴 sin permiso', 'bad'); } });
+  mq.on('error', err => { if (/authori|bad user|credentials/i.test(err.message)){ mq.end(true); badge('sin permiso', 'bad'); } });
 }
 // ---- guardian de red (Suricata en la laptop): escudo del modo profesor ----
 let seg = null;
 function renderSeg(){
-  const set = (cls, ico, t, sub, mini) => { $('shield').className = 'shield ' + cls; $('shIco').textContent = ico;
-    $('shTitle').textContent = t; $('shSub').textContent = sub; $('shMini').textContent = mini; };
+  const set = (cls, t, sub) => { $('shield').className = 'shield ' + cls; $('shTitle').textContent = t; $('shSub').textContent = sub;
+    $('shMini').className = 'mini ' + cls; };
   const lista = seg && seg.ultimas ? seg.ultimas : [];
   $('shList').innerHTML = '';
-  if (!seg) return set('', '🛡️', 'Guardián de red: apagado', 'Ejecuta seguridad\\INICIAR_GUARDIAN.bat en la laptop.', '');
+  if (!seg) return set('', 'Guardián de red: apagado', 'Ejecuta seguridad\\INICIAR_GUARDIAN.bat en la laptop.');
   const hace = Math.round((Date.now()/1000 - seg.ts)/60);
   for (const a of lista){ const li = document.createElement('li'); li.textContent = a.hora + ' · ' + a.msg; $('shList').appendChild(li); }
-  if (hace > 2) return set('', '🛡️', 'Guardián de red: apagado', 'Última señal hace ' + hace + ' min.', '');
+  if (hace > 2) return set('', 'Guardián de red: apagado', 'Última señal hace ' + hace + ' min.');
   const n = seg.hoy + (seg.hoy === 1 ? ' alerta' : ' alertas') + ' hoy';
-  if (seg.estado === 'alerta') set('bad', '⚠️', 'Alerta de seguridad en la red', n + '. Revisa la ventana del guardián en la laptop.', '⚠️');
-  else set('ok', '🛡️', 'Red segura', seg.hoy ? n + ', ninguna en el último minuto.' : 'Sin alertas hoy.', '🛡️');
+  if (seg.estado === 'alerta') set('bad', 'Alerta de seguridad en la red', n + '. Revisa la ventana del guardián en la laptop.');
+  else set('ok', 'Red segura', seg.hoy ? n + ', ninguna en el último minuto.' : 'Sin alertas hoy.');
 }
 setInterval(renderSeg, 15000);
 
 if (CLOUD){
   nubeConectar();
   setInterval(() => { if (!demo && lastMsg && Date.now() - lastMsg > 10000 && moduloOnline){
-    badge('🟡 sin datos del módulo', 'bad'); render(null); } }, 2000);
+    badge('sin datos del módulo', 'bad'); render(null); } }, 2000);
 }
 
 async function poll(){
   if (demo || CLOUD) return;
   try {
     const r = await fetch(BASE + '/datos', {cache:'no-store'});
-    last = await r.json(); fails = 0; badge('🟢 conectado', 'ok'); render(last);
+    last = await r.json(); fails = 0; badge('conectado', 'ok'); render(last);
     syncInputs(last);
   } catch(e){
-    if (++fails >= 3){ badge('🔴 sin conexión', 'bad'); render(null); }
+    if (++fails >= 3){ badge('sin conexión', 'bad'); render(null); }
   }
 }
 setInterval(poll, 1000); poll();
 $('send').onclick = () => {
   const q = `sp=${$('inSP').value}&tmax=${$('inTM').value}`;
-  if (demo) { demoState.sp = +$('inSP').value; demoState.tmax = +$('inTM').value; return; }
+  if (demo) { demoState.sp = +$('inSP').value; demoState.tmax = +$('inTM').value; return msgProfe('Meta cambiada en la demostración ✔'); }
   if (CLOUD){
     const pin = $('inPass').value;
     if (!/^[A-Za-z0-9]{4,}$/.test(pin)) return msgProfe('Escribe el PIN del profesor (solo letras y números)', true);
@@ -707,12 +896,12 @@ $('send').onclick = () => {
 
 // ---- modo demo (para presentar sin ESP32) ----
 const demoState = {h:80, t:24, sp:80, tmax:26, fog:0, fan:0, tgt:{h:80, t:24}};
-const SC = {'😊 Todo bien':{h:null,t:24}, '🥵 Mucho calor':{h:null,t:32}, '🏜️ Muy seco':{h:56,t:24},
-            '🌧️ Muy mojado':{h:94,t:24}, '🥶 Mucho frío':{h:null,t:13}};
+const SC = {'Todo bien':{h:null, t:24, c:'#3fa84a'}, 'Mucho calor':{h:null, t:32, c:'#e9581f'}, 'Muy seco':{h:56, t:24, c:'#c98a12'},
+            'Muy mojado':{h:94, t:24, c:'#2f86de'}, 'Mucho frío':{h:null, t:13, c:'#5a7fd6'}};
 function startDemo(){
-  demo = true; $('demoBtn').style.display = 'none'; if (mq) mq.end(true); $('demo').classList.add('show'); badge('🎮 modo demostración', 'ok');
+  demo = true; $('demoBtn').style.display = 'none'; if (mq) mq.end(true); $('demo').classList.add('show'); badge('modo demostración', 'demo');
   const box = $('demoRow'); box.innerHTML = '';
-  for (const k in SC){ const b = document.createElement('button'); b.textContent = k;
+  for (const k in SC){ const b = document.createElement('button'); b.textContent = k; b.style.setProperty('--c', SC[k].c);
     b.onclick = () => { demoState.tgt = {h: SC[k].h ?? demoState.sp, t: SC[k].t};
       box.querySelectorAll('button').forEach(x => x.classList.toggle('sel', x === b)); };
     box.appendChild(b); }
